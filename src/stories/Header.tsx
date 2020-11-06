@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/tslint/config */
 import React from 'react';
 
-import { Button } from './Button';
+// import { Button } from './Button';
 import './header.css';
 
 export interface HeaderProps {
@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <h1>Acme</h1>
             </div>
             <div>
-                {user ? (
+                {/* {user ? (
                     <Button size="small" onClick={onLogout} label="Log out" />
                 ) : (
                     <>
@@ -56,7 +56,7 @@ export const Header: React.FC<HeaderProps> = ({
                             label="Sign up"
                         />
                     </>
-                )}
+                )} */}
             </div>
         </div>
     </header>

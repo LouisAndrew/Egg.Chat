@@ -1,0 +1,3 @@
+const baseStyle = {};
+
+export default {};
