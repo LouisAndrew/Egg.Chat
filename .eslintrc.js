@@ -157,7 +157,7 @@ module.exports = {
         'no-debugger': 2,
         'no-duplicate-case': 2,
         'no-empty': 2,
-        'no-empty-function': 2,
+        'no-empty-function': 1,
         'no-eval': 2,
         'no-extra-bind': 2,
         'no-extra-semi': 2,

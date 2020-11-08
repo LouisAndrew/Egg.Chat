@@ -2,11 +2,11 @@ import React from 'react';
 
 import { ThemeProvider } from 'emotion-theming';
 import { Button } from 'rebass';
-import { InlineIcon } from '@iconify/react';
-import pencilSquare from '@iconify-icons/bi/pencil-square';
+import { BsPencilSquare } from 'react-icons/bs';
 
 import theme from './styles/theme';
 import logo from './logo.svg';
+import { ChatInput } from 'components/inputs';
 
 const App: React.FC<any> = () => {
     return (
@@ -33,12 +33,20 @@ const App: React.FC<any> = () => {
                     Secondary: <Button variant="secondary">Click me</Button>
                     Primary with logo:{' '}
                     <Button>
-                        Click me! <InlineIcon icon={pencilSquare} />
+                        Click me! <BsPencilSquare />
                     </Button>
                     Secondary with logo:{' '}
                     <Button variant="secondary">
-                        Click me! <InlineIcon icon={pencilSquare} />
+                        Click me! <BsPencilSquare />
                     </Button>
+                </div>
+                <div>
+                    Inputs= chat input:{' '}
+                    <ChatInput
+                        sendMsg={(msg) => {
+                            console.log(msg);
+                        }}
+                    />
                 </div>
             </div>
         </ThemeProvider>
