@@ -21,8 +21,8 @@ const theme = {
     },
     space: [0, 4, 8, 16, 32, 64, 128, 256],
     fonts: {
-        body: 'system-ui, sans-serif',
-        heading: 'inherit',
+        body: "'Open Sans', sans-serif",
+        heading: "'Raleway', sans-serif",
         monospace: 'Menlo, monospace',
     },
     fontWeights: {

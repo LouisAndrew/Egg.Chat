@@ -20,7 +20,10 @@ const Template: Story<ButtonProps & { children: any }> = ({
 }) => <Button {...args}>{children}</Button>;
 
 export const Primary = Template.bind({});
-Primary.args = {};
+Primary.args = {
+    children: 'Test Button',
+    variant: 'primary',
+};
 
 export const Secondary = Template.bind({});
 Secondary.args = {};
