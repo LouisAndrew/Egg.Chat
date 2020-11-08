@@ -28,11 +28,24 @@ const ChatInput: React.FC<Props> = ({ sendMsg }) => {
     };
 
     return (
-        <Box as="form" onSubmit={handleSubmit}>
+        <Box
+            as="form"
+            onSubmit={handleSubmit}
+            bg="#fff"
+            sx={{
+                display: 'flex',
+                borderWidth: 1,
+                borderStyle: 'solid',
+                borderColor: 'black.0',
+                borderRadius: 8,
+                p: 1,
+            }}
+        >
             <Input
                 placeholder="Type Here"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
+                variant="variants.chatInput"
             />
             <Button type="submit">
                 SEND <BsPencilSquare />
