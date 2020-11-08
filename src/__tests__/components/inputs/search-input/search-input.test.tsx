@@ -11,6 +11,7 @@ import ChatInput from 'components/inputs/search-input';
 describe('ChatInput', () => {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     const mockSearch = jest.fn((name) => {});
+    const mockInput = 'John Doe';
 
     const Element = <ChatInput search={mockSearch} />;
 
@@ -34,11 +35,32 @@ describe('ChatInput', () => {
 
         const inputField = getByPlaceholderText('SEARCH NAME');
 
-        const mockInput = 'John Doe';
-
         userEvent.type(inputField, mockInput);
         expect(mockSearch).toBeCalled();
         expect(mockSearch).toBeCalledWith(mockInput);
+    });
+
+    it('Should not render the reset button if the text field is empty', () => {
+        const { getByPlaceholderText, queryByTestId } = render(Element);
+        const inputField = getByPlaceholderText('SEARCH NAME');
+        const resetButton = queryByTestId('search-reset');
+
+        expect(resetButton).not.toBeInTheDocument();
+
+        userEvent.type(inputField, mockInput);
+        expect(queryByTestId('search-reset')).toBeInTheDocument();
+    });
+
+    it('Should reset the value of the text field when reset button is clicked', () => {
+        const { getByPlaceholderText, getByTestId } = render(Element);
+        const inputField = getByPlaceholderText('SEARCH NAME');
+
+        userEvent.type(inputField, mockInput);
+        const resetButton = getByTestId('search-reset');
+
+        expect((inputField as HTMLInputElement).value).toBe(mockInput);
+        userEvent.click(resetButton);
+        expect((inputField as HTMLInputElement).value).toBe('');
     });
 
     it('matches snapshot', () => {

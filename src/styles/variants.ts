@@ -29,6 +29,11 @@ const inputs = {
             path: {
                 color: 'white.1',
             },
+
+            '&.reset': {
+                ml: 0,
+                cursor: 'pointer',
+            },
         },
         '& > input': {
             ...inputBase,
