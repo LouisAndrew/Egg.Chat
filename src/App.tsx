@@ -6,7 +6,7 @@ import { BsPencilSquare } from 'react-icons/bs';
 
 import theme from './styles/theme';
 import logo from './logo.svg';
-import { ChatInput } from 'components/inputs';
+import { ChatInput, SearchInput } from 'components/inputs';
 
 const App: React.FC<any> = () => {
     return (
@@ -41,10 +41,18 @@ const App: React.FC<any> = () => {
                     </Button>
                 </div>
                 <div>
-                    Inputs= chat input:{' '}
+                    Inputs=
+                    <br />
+                    chat input:{' '}
                     <ChatInput
                         sendMsg={(msg) => {
                             console.log(msg);
+                        }}
+                    />
+                    Search input:
+                    <SearchInput
+                        search={(name) => {
+                            console.log(name);
                         }}
                     />
                 </div>
