@@ -1,12 +1,13 @@
 import { Status, User } from '../schema';
-import { mockChatroom } from './chatroom';
+
+const CHATROOM_ID = '0972';
 
 const mockUser1: User = {
     uid: '1234',
     displayImage: '',
     displayName: 'John Doe',
     status: Status.ONLINE,
-    chatrooms: [mockChatroom.roomId],
+    chatrooms: [CHATROOM_ID],
 };
 
 const mockUser2: User = {
@@ -14,7 +15,7 @@ const mockUser2: User = {
     displayImage: '',
     displayName: 'Jane Doe',
     status: Status.OFFLINE,
-    chatrooms: [mockChatroom.roomId],
+    chatrooms: [CHATROOM_ID],
 };
 
 export { mockUser2, mockUser1 };

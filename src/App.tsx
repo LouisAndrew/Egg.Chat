@@ -7,6 +7,8 @@ import { BsPencilSquare } from 'react-icons/bs';
 import theme from './styles/theme';
 import logo from './logo.svg';
 import { ChatInput, SearchInput, AddChatroomInput } from 'components/inputs';
+import { mockMessage, mockUser1, mockUser2 } from 'helper/mocks';
+import Message from 'components/message';
 
 const App: React.FC<any> = () => {
     return (
@@ -45,20 +47,41 @@ const App: React.FC<any> = () => {
                     <br />
                     chat input:{' '}
                     <ChatInput
-                        sendMsg={(msg) => {
+                        sendMsg={(msg: string) => {
                             console.log(msg);
                         }}
                     />
                     Search input:
                     <SearchInput
-                        search={(name) => {
+                        search={(name: string) => {
                             console.log(name);
                         }}
                     />
                     Add chatroom input:
                     <AddChatroomInput
-                        search={(query) => {
+                        search={(query: string) => {
                             console.log(query);
+                        }}
+                    />
+                </div>
+
+                <div>
+                    Msgs:
+                    <br />
+                    sent:{' '}
+                    <Message
+                        {...mockMessage}
+                        userId={mockUser1.uid}
+                        deleteMsg={(msgId: string) => {
+                            console.log(msgId);
+                        }}
+                    />
+                    Received: sent:{' '}
+                    <Message
+                        {...mockMessage}
+                        userId={mockUser2.uid}
+                        deleteMsg={(msgId: string) => {
+                            console.log(msgId);
                         }}
                     />
                 </div>

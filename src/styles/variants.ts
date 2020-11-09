@@ -9,6 +9,71 @@ const inputBase = {
     },
 };
 
+const messagesBase = {
+    fontFamily: 'body',
+    fontSize: [2],
+    position: 'relative',
+    p: [2],
+    width: '100%',
+    borderRadius: 10,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: 'black.0',
+};
+
+const messages = {
+    received: {
+        ...messagesBase,
+        bg: 'white.0',
+        color: 'black.1',
+        borderBottomLeftRadius: 0,
+        mr: [2],
+    },
+    sent: {
+        ...messagesBase,
+        bg: 'blue.dark.0',
+        color: 'white.1',
+        borderBottomRightRadius: 0,
+        ml: [2],
+        '&:hover .menu-arrow': {
+            opacity: 1,
+        },
+        // styles for the menu..
+        '.menu-enter': {
+            opacity: 0,
+            transform: 'translateX(20px)',
+        },
+        '.menu-enter-active': {
+            opacity: 1,
+            transform: 'translateX(0)',
+            transition: '200ms',
+        },
+        '.menu-exit': {
+            opacity: 1,
+            transform: 'translateX(0)',
+        },
+        '.menu-exit-active': {
+            opacity: 0,
+            transform: 'translateX(20px)',
+            transition: '200ms',
+        },
+    },
+    deleteMenu: {
+        ...messagesBase,
+        bg: 'misc.0',
+        color: 'white.1',
+        position: 'absolute',
+        width: 'calc(100% + 1px)',
+        top: 0,
+        left: 0,
+        borderBottomRightRadius: 0,
+        borderColor: 'misc.0',
+        'svg.close': {
+            cursor: 'pointer',
+        },
+    },
+};
+
 const inputs = {
     chatInput: {
         ...inputBase,
@@ -49,4 +114,5 @@ const inputs = {
 
 export default {
     ...inputs,
+    ...messages,
 };

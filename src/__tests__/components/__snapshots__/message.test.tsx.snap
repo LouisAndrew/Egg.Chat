@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Message matches snapshot 1`] = `
+<div
+  className="css-1kw0tju"
+>
+  <div
+    className="css-pqyr7c"
+  >
+    02:12
+  </div>
+  <div
+    className="css-8ma5b7"
+    data-testid="wrapper"
+  >
+    <div
+      className="css-vurnku"
+    >
+      Hello, World
+    </div>
+    <div
+      className="menu-arrow css-1voq0am"
+      data-testid="menu-arrow"
+      onClick={[Function]}
+    >
+      <svg
+        fill="currentColor"
+        height="1em"
+        stroke="currentColor"
+        strokeWidth="0"
+        style={
+          Object {
+            "color": undefined,
+          }
+        }
+        viewBox="0 0 16 16"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          clipRule="evenodd"
+          d="M11.354 1.646a.5.5 0 010 .708L5.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z"
+          fillRule="evenodd"
+        />
+      </svg>
+    </div>
+  </div>
+</div>
+`;

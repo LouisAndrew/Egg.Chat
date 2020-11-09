@@ -73,22 +73,22 @@ describe('Message', () => {
     });
 
     it('Should not display menu-arrow when message is not sent by logged in user', () => {
-        const { getByTestId } = render(ElementUser2);
+        const { queryByTestId, getByTestId } = render(ElementUser2);
 
         const wrapper = getByTestId('wrapper');
         userEvent.hover(wrapper);
 
-        const menuArrow = getByTestId('menu-arrow');
+        const menuArrow = queryByTestId('menu-arrow');
         expect(menuArrow).not.toBeInTheDocument();
     });
 
     it('Should display menu-arrow when the component is hovered if the message is sent by logged in user.', () => {
-        const { getByTestId } = render(Element);
+        const { queryByTestId, getByTestId } = render(Element);
 
         const wrapper = getByTestId('wrapper');
         userEvent.hover(wrapper);
 
-        const menuArrow = getByTestId('menu-arrow');
+        const menuArrow = queryByTestId('menu-arrow');
         expect(menuArrow).toBeInTheDocument();
     });
 
@@ -122,7 +122,7 @@ describe('Message', () => {
     });
 
     it('matches snapshot', () => {
-        const run = false;
+        const run = true;
 
         if (run) {
             const tree = renderer.create(Element).toJSON();

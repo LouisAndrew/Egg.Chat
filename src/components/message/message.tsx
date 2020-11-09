@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { CSSTransition } from 'react-transition-group';
 // import styling libs
+import { Box, Text, Flex } from 'rebass';
+import { BsChevronLeft, BsFillTrashFill, BsXCircleFill } from 'react-icons/bs';
 // import local components
 import { Message as MsgSchema } from 'helper/schema';
 
@@ -37,14 +40,89 @@ export enum MsgStatus {
 /**
  * Message component to show a message sent by user.
  */
-const Message: React.FC<Props> = ({ sentAt, sentBy, userId, msg }) => {
-    // TODO: Integrate functionality of displaying status of the message.
+const Message: React.FC<Props> = ({
+    sentAt,
+    sentBy,
+    userId,
+    msg,
+    msgId,
+    deleteMsg,
+}) => {
+    const [showMenu, setShowMenu] = useState(false);
+    const getTime = (date: Date) => {
+        const pad = (num: number) => (num < 10 ? `0${num}` : num);
 
-    // TODO:Integrate menu.
+        return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    };
 
-    // TODO: Integrate delete message.
+    const isMsgSent = sentBy === userId;
 
-    return <></>;
+    return (
+        <Flex flexDirection={isMsgSent ? 'row' : 'row-reverse'}>
+            {/* render date! */}
+            <Text variant="timestamp">{getTime(sentAt)}</Text>
+            <Box
+                data-testid="wrapper"
+                variant={isMsgSent ? 'sent' : 'received'}
+                sx={{ transition: '0.2s', borderWidth: showMenu ? 0 : 1 }}
+            >
+                <Text>{msg}</Text>
+                {isMsgSent && (
+                    <Box
+                        data-testid="menu-arrow"
+                        className="menu-arrow"
+                        sx={{
+                            position: 'absolute',
+                            top: 0,
+                            right: 8,
+                            height: '100%',
+                            cursor: 'pointer',
+                            opacity: 0,
+                            transition: '0.2s',
+                            '&:hover': {
+                                right: 16,
+                            },
+                            svg: {
+                                height: '100%',
+                            },
+                        }}
+                        onClick={() => setShowMenu(true)}
+                    >
+                        <BsChevronLeft />
+                    </Box>
+                )}
+
+                {/* enable menu to be shown if the msg is sent by logged in user */}
+                {isMsgSent && (
+                    <CSSTransition
+                        in={showMenu}
+                        timeout={200}
+                        classNames="menu"
+                        unmountOnExit={true}
+                    >
+                        <Flex alignItems="center" variant="deleteMenu">
+                            <Flex
+                                data-testid="menu-delete"
+                                onClick={() => {
+                                    deleteMsg(msgId);
+                                }}
+                                alignItems="center"
+                                width="100%"
+                                sx={{ cursor: 'pointer', svg: { mr: 3 } }}
+                            >
+                                <BsFillTrashFill />
+                                Delete Message
+                            </Flex>
+                            <BsXCircleFill
+                                className="close"
+                                onClick={() => setShowMenu(false)}
+                            />
+                        </Flex>
+                    </CSSTransition>
+                )}
+            </Box>
+        </Flex>
+    );
 };
 
 export { Message };
