@@ -12,7 +12,7 @@ const App: React.FC<any> = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <ChatWindow />
+            <ChatWindow roomId="EFGH" />
         </ThemeProvider>
     );
 };

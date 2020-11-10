@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
-// import firebase from 'firebase';
+import firebase from 'firebase';
 // import styling libs
 import { Box } from 'rebass';
 // import local components
 import Message from 'components/message';
+import { ChatInput } from 'components/inputs';
 
 import { db } from 'services/firebase';
 import { Message as MsgSchema } from 'helper/schema';
 
-const ChatWindow: React.FC<unknown> = () => {
-    const [msgs, setMsgs] = useState<MsgSchema[]>([]);
+type Props = {
+    roomId: string;
+};
 
-    const dbRef = db.collection('chatroom').doc('EFGH');
+const ChatWindow: React.FC<Props> = ({ roomId }) => {
+    const [msgs, setMsgs] = useState<MsgSchema[]>([]);
+    const loggedInUser = 'ABCD';
+
+    const dbRef = db.collection('chatroom').doc(roomId);
 
     // listening to realtime data update.
     dbRef.onSnapshot((doc) => {
@@ -32,6 +38,42 @@ const ChatWindow: React.FC<unknown> = () => {
         }
     });
 
+    /**
+     * Function to create msgId. MsgId must be in every chatroom unique.
+     * msgId -> roomID + nums of msg sent.
+     */
+    const createMsgId = () => {
+        // get last sent msgID
+        const lastSentId = msgs[msgs.length - 1].msgId;
+
+        // get last sent Number by splitting roomId from the string.
+        const lastSentNum = lastSentId.split(roomId)[1];
+
+        return `${roomId}${parseInt(lastSentNum, 10) + 1}`;
+    };
+
+    /**
+     * function to send a message everyrime user submits the form on ChatInput component
+     * @param msg mesasge content
+     */
+    const sendMsg = async (msg: string) => {
+        try {
+            // create Msg object
+            // TODO: handle error when msg is not sent.
+            const newMsg = await dbRef.update({
+                messages: firebase.firestore.FieldValue.arrayUnion({
+                    msg,
+                    msgId: createMsgId(),
+                    sentBy: loggedInUser,
+                    // creating firestore-compatible date type. -> FieldValue.serverTimestamp() can't be called here
+                    sentAt: firebase.firestore.Timestamp.fromDate(new Date()),
+                }),
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
     return (
         <Box>
             <Box>Messages</Box>
@@ -40,13 +82,15 @@ const ChatWindow: React.FC<unknown> = () => {
                     <Message
                         key={msg.msgId}
                         {...msg}
-                        userId="ABCD"
+                        userId={loggedInUser}
                         deleteMsg={(msgId: string) => {
                             console.log(msgId);
                         }}
                     />
                 ))}
             </Box>
+
+            <ChatInput sendMsg={sendMsg} />
         </Box>
     );
 };
