@@ -56,19 +56,18 @@ const Sidepanel: React.FC<Props> = () => {
                             loggedInUser
                         );
 
-                        // get the needed img url.
-                        const imgUrl = await userDbRef
+                        // get the needed img url and display name.
+                        const otherUserData: UserSchema = await userDbRef
                             .doc(otherUser[0])
                             .get()
-                            .then(
-                                (userDoc) =>
-                                    (userDoc.data() as any).displayImage
-                            );
+                            .then((userDoc) => userDoc.data() as UserSchema);
 
                         // TODO: handle if in a chatroom there are multiple users!
                         return {
                             ...chatroomDocData,
-                            imgUrl,
+                            imgUrl: otherUserData.displayImage,
+                            roomName: otherUserData.displayName,
+                            roomId: chatroomDoc.id,
                         };
                     })
             )
@@ -83,11 +82,18 @@ const Sidepanel: React.FC<Props> = () => {
     return (
         <Box>
             {chatrooms.map((room) => (
-                <Box
-                    sx={{ height: 100, width: 100, bg: '#f00' }}
-                    key={room.roomId}
-                    data-testid={room.roomId}
-                />
+                <Box key={`${room.roomId}-sidepanel`} data-testid={room.roomId}>
+                    <img
+                        src={room.imgUrl}
+                        alt="hh"
+                        style={{ height: 400, width: 400 }}
+                    />
+                    <h1>{room.roomName}</h1>
+                    <h2>
+                        {room.messages.length > 0 &&
+                            room.messages[room.messages.length - 1].msg}
+                    </h2>
+                </Box>
             ))}
         </Box>
     );
