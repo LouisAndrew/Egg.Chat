@@ -8,7 +8,18 @@ import '@testing-library/jest-dom';
 
 import Sidepanel from 'components/dashboard/sidepanel';
 import { Chatroom as RoomSchema, User as UserSchema } from 'helper/schema';
-import { mockChatroom, mockUser1 } from 'helper/mocks';
+import { mockChatroom, mockUser1, mockUser2 } from 'helper/mocks';
+
+import * as Firebase from 'firebase';
+
+const mockUserDb: { [key: string]: UserSchema } = {
+    '1234': mockUser1,
+    '5678': mockUser2,
+};
+
+const mockChatroomDb: { [key: string]: RoomSchema } = {
+    '0972': mockChatroom,
+};
 
 describe('Sidepanel', () => {
     const mockSetActiveChatroom = jest.fn((str) => {});
@@ -17,6 +28,35 @@ describe('Sidepanel', () => {
     const Element = <Sidepanel setActiveChatRoom={mockSetActiveChatroom} />;
 
     afterEach(cleanup);
+    beforeEach(() => {
+        jest.mock('firebase', () => ({
+            firestore: () => ({
+                collection: (ref: string) => {
+                    if (ref === 'user') {
+                        return {
+                            doc: (id: string) => ({
+                                get: () =>
+                                    new Promise((res) => {
+                                        res(mockUserDb[id]);
+                                    }),
+                            }),
+                        };
+                    } else if (ref === 'chatroom') {
+                        return {
+                            doc: (id: string) => ({
+                                get: () =>
+                                    new Promise((res) => {
+                                        res(mockChatroomDb[id]);
+                                    }),
+                            }),
+                        };
+                    } else {
+                        return;
+                    }
+                },
+            }),
+        }));
+    });
 
     it('renders without crashing', () => {
         const div = document.createElement('div');
@@ -26,8 +66,10 @@ describe('Sidepanel', () => {
     it('Should render the chatrooms correctly', () => {
         const { queryByTestId } = render(Element);
 
-        const room = queryByTestId(mockChatRooms[0].roomId);
-        expect(room).toBeInTheDocument();
+        setTimeout(() => {
+            const room = queryByTestId(mockChatRooms[0].roomId);
+            expect(room).toBeInTheDocument();
+        }, 1000);
     });
 
     it('Should not render the menu when component first rendered.', () => {

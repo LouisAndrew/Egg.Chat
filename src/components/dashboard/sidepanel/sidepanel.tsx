@@ -80,7 +80,17 @@ const Sidepanel: React.FC<Props> = () => {
         }
     });
 
-    return <></>;
+    return (
+        <Box>
+            {chatrooms.map((room) => (
+                <Box
+                    sx={{ height: 100, width: 100, bg: '#f00' }}
+                    key={room.roomId}
+                    data-testid={room.roomId}
+                />
+            ))}
+        </Box>
+    );
 };
 
 export { Sidepanel };
