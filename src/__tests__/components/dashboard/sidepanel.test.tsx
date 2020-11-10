@@ -70,7 +70,6 @@ describe('Sidepanel', () => {
         userEvent.click(searchUserToggle);
 
         const searchUserInput = queryByTestId('search-user');
-        fw;
         const menu = queryByTestId('menu');
         expect(menu).not.toBeInTheDocument();
         expect(searchUserInput).toBeInTheDocument();
