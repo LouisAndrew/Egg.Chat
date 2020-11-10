@@ -1,4 +1,3 @@
-
-import {ChatWindow} from './chat-window';
+import { ChatWindow } from './chat-window';
 
 export default ChatWindow;
