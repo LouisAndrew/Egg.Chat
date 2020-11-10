@@ -11,6 +11,7 @@ interface Chatroom {
     roomId: string;
     users: string[];
     messages: Message[];
+    imgUrl?: string;
 }
 
 export type { Chatroom };
