@@ -17,8 +17,8 @@ const ChatWindow: React.FC<Props> = ({ roomId }) => {
     const [msgs, setMsgs] = useState<MsgSchema[]>([]);
     const loggedInUser = 'ABCD';
 
+    // initialize database ref.
     const dbRef = db.collection('chatroom').doc(roomId);
-
     // listening to realtime data update.
     dbRef.onSnapshot((doc) => {
         const data = doc.data();
