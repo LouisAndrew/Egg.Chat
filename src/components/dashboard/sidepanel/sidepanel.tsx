@@ -73,6 +73,8 @@ const Sidepanel: React.FC<Props> = () => {
             )
         );
 
+        // calls sort rooms here!
+
         // update data
         if (JSON.stringify(chatroomsUpdated) !== JSON.stringify(chatrooms)) {
             setChatrooms(chatroomsUpdated);
