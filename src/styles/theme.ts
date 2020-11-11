@@ -3,7 +3,8 @@ import text from './texts';
 import variants from './variants';
 
 const theme = {
-    breakpoints: ['40em', '52em', '64em'],
+    //             640,   832,     1040
+    breakpoints: ['40em', '48em', '65em'],
     fontSizes: [12, 14, 16, 20, 24, 32, 48, 64],
     colors: {
         blue: {

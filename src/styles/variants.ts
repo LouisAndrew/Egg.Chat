@@ -140,8 +140,8 @@ const users = {
     userBig: {
         ...userBase,
         img: {
-            height: 100,
-            width: 100,
+            height: [80, 80, 100],
+            width: [80, 80, 100],
         },
         '& .details': {
             py: [3],

@@ -9,12 +9,13 @@ import User from 'components/user';
 import { db } from 'services/firebase';
 import { Chatroom as RoomSchema, User as UserSchema } from 'helper/schema';
 import { mockUser1 } from 'helper/mocks';
+import { ChatPartnerDetails } from '../dashboard';
 
 type Props = {
     /**
      * Function to set a specific chatroom active (show chatroom content in ChatWindow)
      */
-    setActiveChatRoom: (roomId: string) => void;
+    setActiveChatRoom: (roomId: string, args: ChatPartnerDetails) => void;
 };
 
 /**
@@ -108,6 +109,7 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
                             imgUrl: otherUserData.displayImage,
                             roomName: otherUserData.displayName,
                             roomId: chatroomDoc.id,
+                            roomStatus: otherUserData.status,
                         };
                     })
             )
@@ -127,7 +129,13 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
     // TODO: is Active
 
     return (
-        <Box bg="blue.dark.1" width={['30%']} px={[2]} py={[3]}>
+        <Box
+            bg="blue.dark.1"
+            width={['100vw', '100vw', '40%', '30%']}
+            px={[2]}
+            py={[3]}
+            sx={{ flexGrow: 1 }}
+        >
             <User {...currentUser} />
             {chatrooms.map((room) => (
                 <Chatroom

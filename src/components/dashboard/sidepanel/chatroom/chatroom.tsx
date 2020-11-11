@@ -2,6 +2,8 @@ import React from 'react';
 // import styling libs
 import { Box, Heading, Text, Flex, Image } from 'rebass';
 // import local components
+
+import { ChatPartnerDetails } from '../../dashboard';
 import { Chatroom as RoomSchema } from 'helper/schema';
 import { getTime } from 'helper/util/get-time';
 
@@ -21,7 +23,7 @@ type Props = RoomSchema & {
     /**
      * Function to set this room as active in ChatWindow component
      */
-    setActiveChatRoom: (roomId: string) => void;
+    setActiveChatRoom: (roomId: string, args: ChatPartnerDetails) => void;
 };
 
 const Chatroom: React.FC<Props> = ({
@@ -30,19 +32,27 @@ const Chatroom: React.FC<Props> = ({
     messages,
     imgUrl,
     isActive,
+    roomStatus,
     isNewNotification = false,
     setActiveChatRoom,
     ...rest
 }) => {
     const isMsgEmpty = messages.length === 0;
 
+    /**
+     * Function to be called when chatroom comopnent is clicked
+     */
+    const handleClick = () => {
+        if (roomStatus && roomName && imgUrl) {
+            setActiveChatRoom(roomId, { roomStatus, roomName, imgUrl });
+        }
+    };
+
     return (
         <Flex
             data-testid={rest['data-testid']}
             variant={isActive ? 'chatroomActive' : 'chatroom'}
-            onClick={() => {
-                setActiveChatRoom(roomId);
-            }}
+            onClick={handleClick}
         >
             <Image
                 src={imgUrl}

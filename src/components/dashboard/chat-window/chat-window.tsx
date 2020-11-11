@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import firebase from 'firebase';
 // import styling libs
 import { Box, Flex } from 'rebass';
+import { BsChevronLeft } from 'react-icons/bs';
 // import local components
 import Message from 'components/message';
 import { ChatInput } from 'components/inputs';
@@ -9,13 +10,24 @@ import { ChatInput } from 'components/inputs';
 import { db } from 'services/firebase';
 import { Message as MsgSchema, User as UserSchema } from 'helper/schema';
 import User from 'components/user';
+import { ChatPartnerDetails } from '../dashboard';
 
 type Props = {
+    /**
+     * Unique identifier of the room
+     */
     roomId: string;
-    chatPartner: UserSchema;
+    /**
+     * The user that also in this chatroom, but different than the logged-in user.
+     */
+    chatPartner: ChatPartnerDetails;
+    /**
+     * Function to set the current active chatroom to null.
+     */
+    goBack: () => void;
 };
 
-const ChatWindow: React.FC<Props> = ({ roomId, chatPartner }) => {
+const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
     const [msgs, setMsgs] = useState<MsgSchema[]>([]);
     const loggedInUser = 'ABCD';
 
@@ -77,10 +89,44 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner }) => {
         }
     };
 
+    const { roomName, imgUrl, roomStatus } = chatPartner;
+
+    /**
+     * Mocking user schema from the chatpartner props.
+     */
+    const mockUser: UserSchema = {
+        uid: '',
+        displayImage: imgUrl,
+        displayName: roomName,
+        status: roomStatus,
+        chatrooms: [],
+    };
+
     return (
-        <Flex height="100%" width="100%" flexDirection="column" p={[2]}>
-            <User {...chatPartner} variant="big" />
-            <Box height="100%" my={[2]}>
+        <Flex
+            height="100%"
+            width={['100vw', '100vw', '70%']}
+            flexDirection="column"
+            p={[2]}
+            bg="white.1"
+            flexGrow={1}
+        >
+            <Flex
+                alignItems="center"
+                sx={{ svg: { height: [16], width: [16], mr: [3] } }}
+            >
+                <BsChevronLeft
+                    role="button"
+                    aria-label="go back"
+                    onClick={goBack}
+                />
+                <User {...mockUser} variant="big" />
+            </Flex>
+            <Box
+                height="100%"
+                my={[2]}
+                sx={{ overflowY: 'scroll', overflowX: 'hidden' }}
+            >
                 {msgs.map((msg) => (
                     <Message
                         key={msg.msgId}

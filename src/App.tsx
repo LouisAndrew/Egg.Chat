@@ -5,26 +5,24 @@ import { Flex, Box } from 'rebass';
 
 import theme from './styles/theme';
 
-import { db } from 'services/firebase';
 import Dashboard from 'components/dashboard';
 
 const App: React.FC<any> = () => {
-    console.log(db);
-
     return (
         <ThemeProvider theme={theme}>
             <Flex
                 alignItems="center"
                 justifyContent="center"
                 id="wrapper"
-                sx={{ height: '100vh', width: '100vw' }}
+                sx={{ height: '100vh', width: '100vw', overflowX: 'hidden' }}
+                bg="blue.dark.2"
             >
                 <Box
                     id="window"
                     sx={{
-                        height: [800],
-                        width: [1200],
-                        border: '1px solid black',
+                        height: ['100vh', '100vh', '100vh', 800],
+                        width: ['100vw', '100vw', '100vw', 1200],
+                        // border: '1px solid black',
                     }}
                 >
                     <Dashboard />

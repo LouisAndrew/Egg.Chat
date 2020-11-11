@@ -1,4 +1,5 @@
 import { Message } from './message';
+import { Status } from './user';
 
 /**
  * Chatroom schema to model a chatroom
@@ -19,6 +20,10 @@ interface Chatroom {
      * Name of the room that should be displayed to the logged in user.
      */
     roomName?: string;
+    /**
+     * Status of the other user. used to set room as active at sidepanel
+     */
+    roomStatus?: Status;
 }
 
 export type { Chatroom };

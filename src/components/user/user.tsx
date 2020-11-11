@@ -27,7 +27,7 @@ const User: React.FC<Props> = ({
                 <Heading
                     className="user-name"
                     data-testid="user-name"
-                    fontSize={variant === 'small' ? [2] : []}
+                    fontSize={variant === 'small' ? [2] : [3, 3, 4]}
                     color={variant === 'small' ? 'white.0' : 'black.1'}
                 >
                     {displayName}
@@ -45,7 +45,7 @@ const Status: React.FC<{ status: StatusEnum; variant: 'big' | 'small' }> = ({
     <Text
         className="status"
         data-testid="status"
-        fontSize={variant === 'small' ? [1] : []}
+        fontSize={variant === 'small' ? [1] : [1]}
         color="black.0"
         sx={{ display: 'flex', alignItems: 'center' }}
     >
