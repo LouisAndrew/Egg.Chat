@@ -54,15 +54,21 @@ const Message: React.FC<Props> = ({
     const isMsgSent = sentBy === userId;
 
     return (
-        <Flex flexDirection={isMsgSent ? 'row' : 'row-reverse'}>
+        <Flex
+            flexDirection={isMsgSent ? 'row' : 'row-reverse'}
+            my={[2]}
+            width="fit-content"
+            alignSelf={isMsgSent ? 'flex-end' : 'flex-start'}
+        >
             {/* render date! */}
             <Text variant="timestamp">{getTime(sentAt)}</Text>
             <Box
                 data-testid="wrapper"
                 variant={isMsgSent ? 'sent' : 'received'}
+                width="fit-content"
                 sx={{ transition: '0.2s', borderWidth: showMenu ? 0 : 1 }}
             >
-                <Text>{msg}</Text>
+                <Text width="fit-content">{msg}</Text>
                 {isMsgSent && (
                     <Box
                         data-testid="menu-arrow"

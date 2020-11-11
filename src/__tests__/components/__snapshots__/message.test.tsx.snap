@@ -2,7 +2,7 @@
 
 exports[`Message matches snapshot 1`] = `
 <div
-  className="css-1kw0tju"
+  className="css-7nb7yv"
 >
   <div
     className="css-pqyr7c"
@@ -10,11 +10,11 @@ exports[`Message matches snapshot 1`] = `
     02:12
   </div>
   <div
-    className="css-8ma5b7"
+    className="css-1pep071"
     data-testid="wrapper"
   >
     <div
-      className="css-vurnku"
+      className="css-r8xm40"
     >
       Hello, World
     </div>

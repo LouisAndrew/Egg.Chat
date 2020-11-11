@@ -47,7 +47,7 @@ const ChatInput: React.FC<Props> = ({ sendMsg }) => {
                 onChange={(e) => setText(e.target.value)}
                 variant="variants.chatInput"
             />
-            <Button type="submit">
+            <Button type="submit" width="fit-content" sx={{ flexShrink: 0 }}>
                 SEND <BsPencilSquare />
             </Button>
         </Box>

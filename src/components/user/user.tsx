@@ -57,8 +57,8 @@ const Status: React.FC<{ status: StatusEnum; variant: 'big' | 'small' }> = ({
                     status === StatusEnum.ONLINE
                         ? 'misc.1'
                         : status === StatusEnum.BUSY
-                        ? ''
-                        : '',
+                        ? 'misc.2'
+                        : 'transparent',
                 borderStyle: 'solid',
                 borderColor: 'black.0',
                 borderWidth: status === StatusEnum.OFFLINE ? 1 : 0,

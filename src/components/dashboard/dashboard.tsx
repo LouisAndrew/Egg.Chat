@@ -42,7 +42,11 @@ const Dashboard: React.FC<unknown> = () => {
     >(undefined);
 
     useEffect(() => {
-        console.log('a');
+        const windowWidth = window.innerWidth;
+        // check if window is below the breakpoint of tablet
+        if (windowWidth < 832) {
+            setTransformMobile(active !== undefined);
+        }
     }, [active]);
 
     /**

@@ -13,7 +13,7 @@ exports[`ChatInput matches snapshot 1`] = `
     value=""
   />
   <button
-    className="css-vhv7r1"
+    className="css-rx131n"
     type="submit"
   >
     SEND 

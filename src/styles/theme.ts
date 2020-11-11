@@ -17,8 +17,8 @@ const theme = {
         black: ['#A5A5A5', '#333333'],
         //       secondary,  bg
         white: ['#F3F3F3', '#F7F7FF'],
-        //      banner-new, banner-online
-        misc: ['#FF8590', '#ABFFB3'],
+        //      banner-new, banner-online banner-busy
+        misc: ['#FF8590', '#ABFFB3', '#ffb347'],
     },
     space: [0, 4, 8, 16, 32, 64, 128, 256],
     fonts: {

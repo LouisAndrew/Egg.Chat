@@ -10,6 +10,8 @@ const baseStyling = {
 const svgStyling = {
     height: 14,
     width: 14,
+    minHeight: 14,
+    minWidth: 14,
     ml: 2,
 };
 

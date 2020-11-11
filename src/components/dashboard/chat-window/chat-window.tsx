@@ -58,6 +58,10 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
      * msgId -> roomID + nums of msg sent.
      */
     const createMsgId = () => {
+        if (msgs.length === 0) {
+            return `${roomId}0`;
+        }
+
         // get last sent msgID
         const lastSentId = msgs[msgs.length - 1].msgId;
 
@@ -122,9 +126,11 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
                 />
                 <User {...mockUser} variant="big" />
             </Flex>
-            <Box
+            <Flex
                 height="100%"
                 my={[2]}
+                flexDirection="column"
+                px={[3]}
                 sx={{ overflowY: 'scroll', overflowX: 'hidden' }}
             >
                 {msgs.map((msg) => (
@@ -137,7 +143,7 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
                         }}
                     />
                 ))}
-            </Box>
+            </Flex>
 
             <ChatInput sendMsg={sendMsg} />
         </Flex>
