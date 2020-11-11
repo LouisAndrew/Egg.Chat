@@ -30,6 +30,28 @@ const Sidepanel: React.FC<Props> = () => {
     // results of the search-user operation.
     const [userResult, setUserResult] = useState<UserSchema[]>([]);
 
+    /**
+     * Function to sort the given rooms descending. Sorted by the date of last sent message.
+     * If a room has no message in it, the room would be placed at the beginning of the list.
+     *
+     * @param rooms rooms to be sorted.
+     */
+    const sortRooms = (rooms: RoomSchema[]) =>
+        [...rooms].sort((a, b) => {
+            // handle if a / b does not have any message in it.
+            if (a.messages.length === 0) {
+                return -1;
+            } else if (b.messages.length === 0) {
+                return 1;
+            } else {
+                return (
+                    // compare date / timestamp of the last sent message
+                    b.messages[b.messages.length - 1].sentAt.getTime() -
+                    a.messages[a.messages.length - 1].sentAt.getTime()
+                );
+            }
+        });
+
     const loggedInUser = 'ABCD';
 
     const userDbRef = db.collection('user');
@@ -37,6 +59,8 @@ const Sidepanel: React.FC<Props> = () => {
 
     // initialize database ref.
     const dbRef = userDbRef.doc(loggedInUser);
+
+    // fetchRooms function
     // listening to realtime data update.
     dbRef.onSnapshot(async (doc) => {
         // chatroom should be an array of roomIDs.
@@ -74,10 +98,13 @@ const Sidepanel: React.FC<Props> = () => {
         );
 
         // calls sort rooms here!
+        const chatromsUpdatedSorted = sortRooms(chatroomsUpdated);
 
         // update data
-        if (JSON.stringify(chatroomsUpdated) !== JSON.stringify(chatrooms)) {
-            setChatrooms(chatroomsUpdated);
+        if (
+            JSON.stringify(chatromsUpdatedSorted) !== JSON.stringify(chatrooms)
+        ) {
+            setChatrooms(chatromsUpdatedSorted);
         }
     });
 

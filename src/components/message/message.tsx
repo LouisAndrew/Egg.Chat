@@ -5,6 +5,7 @@ import { Box, Text, Flex } from 'rebass';
 import { BsChevronLeft, BsFillTrashFill, BsXCircleFill } from 'react-icons/bs';
 // import local components
 import { Message as MsgSchema } from 'helper/schema';
+import { getTime } from 'helper/util/get-time';
 
 type Props = MsgSchema & {
     /**
@@ -49,11 +50,6 @@ const Message: React.FC<Props> = ({
     deleteMsg,
 }) => {
     const [showMenu, setShowMenu] = useState(false);
-    const getTime = (date: Date) => {
-        const pad = (num: number) => (num < 10 ? `0${num}` : num);
-
-        return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
-    };
 
     const isMsgSent = sentBy === userId;
 
