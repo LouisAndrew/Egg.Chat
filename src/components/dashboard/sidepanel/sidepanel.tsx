@@ -127,7 +127,7 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
     // TODO: is Active
 
     return (
-        <Box bg="blue.dark.1">
+        <Box bg="blue.dark.1" width={['30%']} px={[2]} py={[3]}>
             <User {...currentUser} />
             {chatrooms.map((room) => (
                 <Chatroom

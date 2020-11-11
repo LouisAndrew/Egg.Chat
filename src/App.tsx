@@ -23,7 +23,7 @@ const App: React.FC<any> = () => {
                     id="window"
                     sx={{
                         height: [800],
-                        width: [800],
+                        width: [1200],
                         border: '1px solid black',
                     }}
                 >

@@ -18,7 +18,7 @@ const Dashboard: React.FC<unknown> = () => {
     };
 
     return (
-        <Flex>
+        <Flex height="100%" width="100%">
             <Sidepanel
                 setActiveChatRoom={(roomId: string) => {
                     console.log(roomId);

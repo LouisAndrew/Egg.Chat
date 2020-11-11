@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import firebase from 'firebase';
 // import styling libs
-import { Box } from 'rebass';
+import { Box, Flex } from 'rebass';
 // import local components
 import Message from 'components/message';
 import { ChatInput } from 'components/inputs';
@@ -78,10 +78,9 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner }) => {
     };
 
     return (
-        <Box>
+        <Flex height="100%" width="100%" flexDirection="column" p={[2]}>
             <User {...chatPartner} variant="big" />
-            <Box>Messages</Box>
-            <Box>
+            <Box height="100%" my={[2]}>
                 {msgs.map((msg) => (
                     <Message
                         key={msg.msgId}
@@ -95,7 +94,7 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner }) => {
             </Box>
 
             <ChatInput sendMsg={sendMsg} />
-        </Box>
+        </Flex>
     );
 };
 
