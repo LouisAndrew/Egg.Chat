@@ -7,15 +7,16 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
 import Chatroom from 'components/dashboard/sidepanel/chatroom';
-import { mockChatroom } from 'helper/mocks';
+import { mockChatroom, mockUser1 } from 'helper/mocks';
 import { Chatroom as RoomSchema } from 'helper/schema';
 import { getTime } from 'helper/util/get-time';
 import theme from 'styles/theme';
 import WithTheme from 'helper/util/with-theme';
 
 describe('Chatroom', () => {
-    const roomName = 'John Doe';
+    const roomName = mockUser1.displayName;
     const imgUrl = './src/img';
+    const roomStatus = mockUser1.status;
 
     const lastMsg = mockChatroom.messages[mockChatroom.messages.length - 1];
 
@@ -24,6 +25,7 @@ describe('Chatroom', () => {
         ...mockChatroom,
         roomName,
         imgUrl,
+        roomStatus,
     };
 
     const mockChatroomEmpty: RoomSchema = {
@@ -165,7 +167,11 @@ describe('Chatroom', () => {
         userEvent.click(wrapper);
 
         expect(mockSetActiveChatroom).toBeCalled();
-        expect(mockSetActiveChatroom).toBeCalledWith(mockChatroom.roomId);
+        expect(mockSetActiveChatroom).toBeCalledWith(mockChatroom.roomId, {
+            imgUrl,
+            roomName,
+            roomStatus,
+        });
     });
 
     it('matches snapshot', () => {

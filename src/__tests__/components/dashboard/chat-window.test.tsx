@@ -7,10 +7,22 @@ import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import ChatWindow from 'components/dashboard/chat-window';
-import { mockChatroom } from 'helper/mocks/chatroom';
+import { mockChatroom, mockUser1 } from 'helper/mocks';
 
 describe('ChatWindow', () => {
-    const Element = <ChatWindow roomId={mockChatroom.roomId} />;
+    const mockGoBack = jest.fn(() => {});
+
+    const Element = (
+        <ChatWindow
+            roomId={mockChatroom.roomId}
+            chatPartner={{
+                roomName: mockUser1.displayName,
+                imgUrl: mockUser1.displayImage,
+                roomStatus: mockUser1.status,
+            }}
+            goBack={mockGoBack}
+        />
+    );
 
     afterEach(cleanup);
 
