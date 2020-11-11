@@ -7,18 +7,21 @@ import Message from 'components/message';
 import { ChatInput } from 'components/inputs';
 
 import { db } from 'services/firebase';
-import { Message as MsgSchema } from 'helper/schema';
+import { Message as MsgSchema, User as UserSchema } from 'helper/schema';
+import User from 'components/user';
 
 type Props = {
     roomId: string;
+    chatPartner: UserSchema;
 };
 
-const ChatWindow: React.FC<Props> = ({ roomId }) => {
+const ChatWindow: React.FC<Props> = ({ roomId, chatPartner }) => {
     const [msgs, setMsgs] = useState<MsgSchema[]>([]);
     const loggedInUser = 'ABCD';
 
     // initialize database ref.
     const dbRef = db.collection('chatroom').doc(roomId);
+
     // listening to realtime data update.
     dbRef.onSnapshot((doc) => {
         const data = doc.data();
@@ -76,6 +79,7 @@ const ChatWindow: React.FC<Props> = ({ roomId }) => {
 
     return (
         <Box>
+            <User {...chatPartner} variant="big" />
             <Box>Messages</Box>
             <Box>
                 {msgs.map((msg) => (

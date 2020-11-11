@@ -1,4 +1,3 @@
-
-import {Chatroom} from './chatroom';
+import { Chatroom } from './chatroom';
 
 export default Chatroom;

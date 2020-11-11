@@ -9,7 +9,7 @@ export default {
     },
     userName: {
         fontFamily: 'heading',
-        fontSize: [4],
+        fontSize: [2],
     },
     msgPreview: {
         fontFamily: 'body',

@@ -47,15 +47,15 @@ const Chatroom: React.FC<Props> = ({
             <Image
                 src={imgUrl}
                 sx={{ borderRadius: 16, flexGrow: 1 }}
-                height={85}
-                width={85}
-                minWidth={85}
+                height={[60]}
+                width={[60]}
+                minWidth={[60]}
             />
             <Flex
                 flexDirection="column"
                 justifyContent="space-between"
-                height={85}
-                py={[3]}
+                height={[60]}
+                py={[2]}
                 mx={[4]}
                 width="100%"
             >

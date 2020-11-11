@@ -32,6 +32,8 @@ const chatroomBase = {
     },
 };
 
+const userBase = {};
+
 const messages = {
     received: {
         ...messagesBase,
@@ -134,8 +136,34 @@ const chatrooms = {
     },
 };
 
+const users = {
+    userBig: {
+        ...userBase,
+        img: {
+            height: 100,
+            width: 100,
+        },
+        '& .details': {
+            py: [3],
+            ml: [4],
+        },
+    },
+    userSmall: {
+        ...userBase,
+        img: {
+            height: 60,
+            width: 60,
+        },
+        '& .details': {
+            py: [2],
+            ml: [4],
+        },
+    },
+};
+
 export default {
     ...inputs,
     ...messages,
     ...chatrooms,
+    ...users,
 };

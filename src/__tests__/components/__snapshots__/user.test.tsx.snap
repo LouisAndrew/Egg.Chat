@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User matches snapshot 1`] = `
+<div
+  className="css-369q98"
+>
+  <img
+    className="css-9taffg"
+    src="http://localhost/src"
+  />
+  <div
+    className="details css-1cc7kk0"
+  >
+    <h2
+      className="user-name css-45gygr"
+      data-testid="user-name"
+    >
+      John Doe
+    </h2>
+    <div
+      className="status css-huhpy"
+      data-testid="status"
+    >
+      <div
+        className="css-1jntkoe"
+      />
+      Online
+    </div>
+  </div>
+</div>
+`;

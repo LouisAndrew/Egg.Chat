@@ -4,9 +4,11 @@ import { without } from 'lodash';
 import { Box } from 'rebass';
 // import local components
 import Chatroom from './chatroom';
+import User from 'components/user';
 
 import { db } from 'services/firebase';
 import { Chatroom as RoomSchema, User as UserSchema } from 'helper/schema';
+import { mockUser1 } from 'helper/mocks';
 
 type Props = {
     /**
@@ -54,7 +56,13 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
             }
         });
 
+    // mocks.
     const loggedInUser = 'ABCD';
+    const currentUser = {
+        ...mockUser1,
+        displayImage:
+            'https://www.iconarchive.com/download/i107345/google/noto-emoji-animals-nature/22235-pig-face.ico',
+    };
 
     const userDbRef = db.collection('user');
     const chatroomDbRef = db.collection('chatroom');
@@ -119,7 +127,8 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
     // TODO: is Active
 
     return (
-        <Box>
+        <Box bg="blue.dark.1">
+            <User {...currentUser} />
             {chatrooms.map((room) => (
                 <Chatroom
                     {...room}

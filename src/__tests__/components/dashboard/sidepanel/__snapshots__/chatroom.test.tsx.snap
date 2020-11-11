@@ -7,14 +7,14 @@ exports[`Chatroom matches snapshot 1`] = `
   onClick={[Function]}
 >
   <img
-    className="css-4gsfli"
+    className="css-1umo6ez"
     src="./src/img"
   />
   <div
-    className="css-vitrm9"
+    className="css-uq47rj"
   >
     <h2
-      className="css-1mxiv8w"
+      className="css-o4i2m7"
     >
       John Doe
     </h2>
