@@ -21,6 +21,17 @@ const messagesBase = {
     borderColor: 'black.0',
 };
 
+const chatroomBase = {
+    color: 'white.1',
+    p: [2],
+    borderRadius: 16,
+    cursor: 'pointer',
+    transition: '0.2s',
+    '&:hover': {
+        bg: 'blue.dark.2',
+    },
+};
+
 const messages = {
     received: {
         ...messagesBase,
@@ -112,7 +123,19 @@ const inputs = {
     },
 };
 
+const chatrooms = {
+    chatroom: {
+        ...chatroomBase,
+        bg: 'blue.dark.1',
+    },
+    chatroomActive: {
+        ...chatroomBase,
+        bg: 'blue.dark.2',
+    },
+};
+
 export default {
     ...inputs,
     ...messages,
+    ...chatrooms,
 };

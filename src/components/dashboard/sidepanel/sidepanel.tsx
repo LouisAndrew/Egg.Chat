@@ -3,6 +3,8 @@ import { without } from 'lodash';
 // import styling libs
 import { Box } from 'rebass';
 // import local components
+import Chatroom from './chatroom';
+
 import { db } from 'services/firebase';
 import { Chatroom as RoomSchema, User as UserSchema } from 'helper/schema';
 
@@ -17,7 +19,7 @@ type Props = {
  * Component that wraps the chatrooms, user, menu and search user components!
  * Connection with database should be made here..
  */
-const Sidepanel: React.FC<Props> = () => {
+const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
     // active chatrooms for this user
     const [chatrooms, setChatrooms] = useState<RoomSchema[]>([]);
 
@@ -89,6 +91,12 @@ const Sidepanel: React.FC<Props> = () => {
                         // TODO: handle if in a chatroom there are multiple users!
                         return {
                             ...chatroomDocData,
+                            messages: chatroomDocData.messages.map(
+                                (msg: any) => ({
+                                    ...msg,
+                                    sentAt: msg.sentAt.toDate(),
+                                })
+                            ),
                             imgUrl: otherUserData.displayImage,
                             roomName: otherUserData.displayName,
                             roomId: chatroomDoc.id,
@@ -108,21 +116,18 @@ const Sidepanel: React.FC<Props> = () => {
         }
     });
 
+    // TODO: is Active
+
     return (
         <Box>
             {chatrooms.map((room) => (
-                <Box key={`${room.roomId}-sidepanel`} data-testid={room.roomId}>
-                    <img
-                        src={room.imgUrl}
-                        alt="hh"
-                        style={{ height: 400, width: 400 }}
-                    />
-                    <h1>{room.roomName}</h1>
-                    <h2>
-                        {room.messages.length > 0 &&
-                            room.messages[room.messages.length - 1].msg}
-                    </h2>
-                </Box>
+                <Chatroom
+                    {...room}
+                    setActiveChatRoom={setActiveChatRoom}
+                    isActive={false}
+                    key={`${room.roomId}-sidepanel`}
+                    data-testid={room.roomId}
+                />
             ))}
         </Box>
     );

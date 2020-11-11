@@ -11,6 +11,7 @@ import { mockChatroom } from 'helper/mocks';
 import { Chatroom as RoomSchema } from 'helper/schema';
 import { getTime } from 'helper/util/get-time';
 import theme from 'styles/theme';
+import WithTheme from 'helper/util/with-theme';
 
 describe('Chatroom', () => {
     const roomName = 'John Doe';
@@ -33,32 +34,43 @@ describe('Chatroom', () => {
     const mockSetActiveChatroom = jest.fn((str) => {});
 
     const Element = (
-        <Chatroom
-            {...mockChatroomExtended}
-            isActive={false}
-            setActiveChatRoom={mockSetActiveChatroom}
-        />
+        <WithTheme>
+            <Chatroom
+                {...mockChatroomExtended}
+                isActive={false}
+                setActiveChatRoom={mockSetActiveChatroom}
+                data-testid="wrapper"
+            />
+        </WithTheme>
     );
+
     const ElementNewNotif = (
         <Chatroom
             {...mockChatroomExtended}
             isActive={false}
             setActiveChatRoom={mockSetActiveChatroom}
             isNewNotification={true}
+            data-testid="wrapper"
         />
     );
+
     const ElementActive = (
-        <Chatroom
-            {...mockChatroomExtended}
-            isActive={true}
-            setActiveChatRoom={mockSetActiveChatroom}
-        />
+        <WithTheme>
+            <Chatroom
+                {...mockChatroomExtended}
+                isActive={true}
+                setActiveChatRoom={mockSetActiveChatroom}
+                data-testid="wrapper"
+            />
+        </WithTheme>
     );
+
     const ElementEmpty = (
         <Chatroom
             {...mockChatroomEmpty}
             isActive={false}
             setActiveChatRoom={mockSetActiveChatroom}
+            data-testid="wrapper"
         />
     );
 
@@ -77,7 +89,9 @@ describe('Chatroom', () => {
 
         expect(roomNameEl).toBeInTheDocument();
         expect(img).toBeInTheDocument();
-        expect((img as HTMLImageElement).src).toBe(imgUrl);
+        expect((img as HTMLImageElement).src).toBe(
+            imgUrl.replace('.', 'http://localhost')
+        );
     });
 
     it('Should render the last message in the room and when its sent', () => {
@@ -155,7 +169,7 @@ describe('Chatroom', () => {
     });
 
     it('matches snapshot', () => {
-        const run = false;
+        const run = true;
 
         if (run) {
             const tree = renderer.create(Element).toJSON();
