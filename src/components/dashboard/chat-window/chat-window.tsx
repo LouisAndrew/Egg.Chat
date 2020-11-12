@@ -82,7 +82,7 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
             const newMsg = await dbRef.update({
                 messages: firebase.firestore.FieldValue.arrayUnion({
                     msg,
-                    msgId: createMsgId(),
+                    msgId: `${createMsgId()}${new Date().getTime()}`,
                     sentBy: loggedInUser,
                     // creating firestore-compatible date type. -> FieldValue.serverTimestamp() can't be called here
                     sentAt: firebase.firestore.Timestamp.fromDate(new Date()),
@@ -92,6 +92,8 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
             console.error(e);
         }
     };
+
+    console.log(msgs);
 
     const { roomName, imgUrl, roomStatus } = chatPartner;
 
