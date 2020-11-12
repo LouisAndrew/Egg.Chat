@@ -57,7 +57,7 @@ describe('Message', () => {
 
         const wrapper = getByTestId('wrapper');
         expect(wrapper).toHaveStyle(
-            `background-color: ${theme.colors.white[0]}`
+            `background-color: ${theme.colors.white[2]}`
         );
         expect(wrapper).toHaveStyle(`color: ${theme.colors.black[1]}`);
     });

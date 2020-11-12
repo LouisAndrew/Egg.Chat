@@ -38,6 +38,8 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
     // results of the search-user operation.
     const [userResult, setUserResult] = useState<UserSchema[]>([]);
 
+    const [searchQuery, setSearchQuery] = useState('');
+
     /**
      * Function to sort the given rooms descending. Sorted by the date of last sent message.
      * If a room has no message in it, the room would be placed at the beginning of the list.
@@ -130,7 +132,9 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
     });
 
     const search = (query: string) => {
-        console.log(query);
+        if (query !== searchQuery) {
+            setSearchQuery(query);
+        }
     };
 
     // TODO: is Active
@@ -138,7 +142,7 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
         fontFamily: 'heading',
         fontWeight: 'bold',
         fontSize: [1],
-        color: 'black.0',
+        color: '#ddd',
         px: [3],
         mt: 3,
         sx: {
@@ -149,7 +153,7 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
             svg: {
                 height: 24,
                 width: 24,
-                path: { fill: 'black.0' },
+                path: { fill: '#ddd' },
                 mr: 3,
                 transition: '0.2s',
             },

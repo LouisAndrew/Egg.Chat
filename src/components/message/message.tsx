@@ -2,7 +2,13 @@ import React, { useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 // import styling libs
 import { Box, Text, Flex } from 'rebass';
-import { BsChevronLeft, BsFillTrashFill, BsXCircleFill } from 'react-icons/bs';
+import {
+    BsChevronLeft,
+    BsFillTrashFill,
+    BsXCircleFill,
+    BsThreeDots,
+    BsX,
+} from 'react-icons/bs';
 // import local components
 import { Message as MsgSchema } from 'helper/schema';
 import { getTime } from 'helper/util/get-time';
@@ -59,7 +65,32 @@ const Message: React.FC<Props> = ({
             my={[2]}
             width="fit-content"
             alignSelf={isMsgSent ? 'flex-end' : 'flex-start'}
+            sx={{ position: 'relative' }}
         >
+            {/* {isMsgSent && (
+                <Box
+                    data-testid="menu-arrow"
+                    className="menu-arrow"
+                    sx={{
+                        top: 0,
+                        right: 8,
+                        height: '100%',
+                        cursor: 'pointer',
+                        opacity: 0,
+                        transition: '0.2s',
+                        '&:hover': {
+                            right: 12,
+                        },
+                        svg: {
+                            height: '100%',
+                        },
+                    }}
+                    onClick={() => setShowMenu(true)}
+                >
+                    <BsChevronLeft />
+                </Box>
+            )} */}
+
             {/* render date! */}
             <Text variant="timestamp">{getTime(sentAt)}</Text>
             <Box
@@ -71,29 +102,30 @@ const Message: React.FC<Props> = ({
                 pl={isMsgSent ? '' : 2}
             >
                 <Text width="fit-content">{msg}</Text>
+
                 {isMsgSent && (
-                    <Box
+                    <Flex
                         data-testid="menu-arrow"
                         className="menu-arrow"
+                        bg="blue.dark.2"
+                        height={24}
+                        width={24}
+                        alignItems="center"
+                        justifyContent="center"
                         sx={{
                             position: 'absolute',
-                            top: 0,
-                            right: 8,
-                            height: '100%',
+                            left: -3,
+                            top: -8,
+                            borderRadius: '50%',
+                            svg: { path: { fill: 'white.0' } },
                             cursor: 'pointer',
                             opacity: 0,
                             transition: '0.2s',
-                            '&:hover': {
-                                right: 12,
-                            },
-                            svg: {
-                                height: '100%',
-                            },
                         }}
-                        onClick={() => setShowMenu(true)}
+                        onClick={() => setShowMenu(!showMenu)}
                     >
-                        <BsChevronLeft />
-                    </Box>
+                        {showMenu ? <BsX /> : <BsThreeDots />}
+                    </Flex>
                 )}
 
                 {/* enable menu to be shown if the msg is sent by logged in user */}
@@ -111,16 +143,15 @@ const Message: React.FC<Props> = ({
                                     deleteMsg(msgId);
                                 }}
                                 alignItems="center"
-                                width="100%"
-                                sx={{ cursor: 'pointer', svg: { mr: 3 } }}
+                                fontSize={[0]}
+                                sx={{
+                                    cursor: 'pointer',
+                                    svg: { mr: 3, flexShrink: 0 },
+                                }}
                             >
                                 <BsFillTrashFill />
                                 Delete Message
                             </Flex>
-                            <BsXCircleFill
-                                className="close"
-                                onClick={() => setShowMenu(false)}
-                            />
                         </Flex>
                     </CSSTransition>
                 )}

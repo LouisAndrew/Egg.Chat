@@ -8,15 +8,15 @@ const theme = {
     fontSizes: [12, 14, 16, 20, 24, 32, 48, 64],
     colors: {
         blue: {
-            //       third,    blue-shade, blue-darker, blue-even-darker
-            dark: ['#545E75', '#4B556C', '#3A4765', '#2F3A54'],
+            //       third,    blue-shade, blue-darker, blue-even-darker, blue darkest
+            dark: ['#545E75', '#4B556C', '#3A4765', '#2F3A54', '#07122D'],
             //      primary
             light: '#CEEDFF',
         },
         //       black-shade, text-color
         black: ['#A5A5A5', '#333333'],
-        //       secondary,  bg
-        white: ['#F3F3F3', '#F7F7FF'],
+        //       secondary,  bg,      white-shade
+        white: ['#F3F3F3', '#F7F7FF', '#E9E9E9'],
         //      banner-new, banner-online banner-busy
         misc: ['#FF8590', '#ABFFB3', '#ffb347'],
     },

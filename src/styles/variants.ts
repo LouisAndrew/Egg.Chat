@@ -16,9 +16,6 @@ const messagesBase = {
     p: [2],
     width: '100%',
     borderRadius: 10,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: 'black.0',
 };
 
 const chatroomBase = {
@@ -37,7 +34,7 @@ const userBase = {};
 const messages = {
     received: {
         ...messagesBase,
-        bg: 'white.0',
+        bg: 'white.2',
         color: 'black.1',
         borderBottomLeftRadius: 0,
         mr: [2],
@@ -70,16 +67,20 @@ const messages = {
             transform: 'translateX(20px)',
             transition: '200ms',
         },
+        position: 'relative',
+        zIndex: 2,
     },
     deleteMenu: {
         ...messagesBase,
-        bg: 'misc.0',
-        color: 'white.1',
+        bg: 'blue.dark.4',
+        color: 'misc.0',
         position: 'absolute',
-        width: 'calc(100% + 1px)',
-        top: 0,
-        left: 0,
-        borderBottomRightRadius: 0,
+        zIndex: 1,
+        width: [150],
+        // width: 'calc(100% + 1px)',
+        // width: 'fit-content',
+        top: 12,
+        left: [-150],
         borderColor: 'misc.0',
         'svg.close': {
             cursor: 'pointer',

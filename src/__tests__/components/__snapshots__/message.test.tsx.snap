@@ -2,7 +2,7 @@
 
 exports[`Message matches snapshot 1`] = `
 <div
-  className="css-7nb7yv"
+  className="css-1i0ja6z"
 >
   <div
     className="css-pqyr7c"
@@ -10,7 +10,7 @@ exports[`Message matches snapshot 1`] = `
     02:12
   </div>
   <div
-    className="css-1aa0t2i"
+    className="css-1bog2s5"
     data-testid="wrapper"
   >
     <div
@@ -19,7 +19,7 @@ exports[`Message matches snapshot 1`] = `
       Hello, World
     </div>
     <div
-      className="menu-arrow css-1638tnf"
+      className="menu-arrow css-1rbsg67"
       data-testid="menu-arrow"
       onClick={[Function]}
     >
@@ -39,7 +39,7 @@ exports[`Message matches snapshot 1`] = `
       >
         <path
           clipRule="evenodd"
-          d="M11.354 1.646a.5.5 0 010 .708L5.707 8l5.647 5.646a.5.5 0 01-.708.708l-6-6a.5.5 0 010-.708l6-6a.5.5 0 01.708 0z"
+          d="M3 9.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm5 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3zm5 0a1.5 1.5 0 110-3 1.5 1.5 0 010 3z"
           fillRule="evenodd"
         />
       </svg>
