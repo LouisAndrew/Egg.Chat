@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { without } from 'lodash';
 // import styling libs
-import { Box } from 'rebass';
+import { Box, Flex, Text } from 'rebass';
+import { BsChevronDown, BsFillPersonPlusFill, BsPower } from 'react-icons/bs';
+import { CSSTransition } from 'react-transition-group';
 // import local components
 import Chatroom from './chatroom';
 import User from 'components/user';
@@ -10,6 +12,7 @@ import { db } from 'services/firebase';
 import { Chatroom as RoomSchema, User as UserSchema } from 'helper/schema';
 import { mockUser1 } from 'helper/mocks';
 import { ChatPartnerDetails } from '../dashboard';
+import { SearchInput } from 'components/inputs';
 
 type Props = {
     /**
@@ -126,26 +129,123 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
         }
     });
 
+    const search = (query: string) => {
+        console.log(query);
+    };
+
     // TODO: is Active
+    const menuStyling = {
+        fontFamily: 'heading',
+        fontWeight: 'bold',
+        fontSize: [1],
+        color: 'black.0',
+        px: [3],
+        mt: 3,
+        sx: {
+            display: 'flex',
+            alignItems: 'center',
+            cursor: 'pointer',
+            transition: '0.2s',
+            svg: {
+                height: 24,
+                width: 24,
+                path: { fill: 'black.0' },
+                mr: 3,
+                transition: '0.2s',
+            },
+            '&:hover': {
+                color: 'white.1',
+                'svg path': { fill: 'white.1' },
+            },
+        },
+    };
 
     return (
         <Box
             bg="blue.dark.1"
             width={['100vw', '100vw', '40%', '30%']}
-            px={[2]}
-            py={[3]}
             sx={{ flexGrow: 1 }}
         >
-            <User {...currentUser} />
-            {chatrooms.map((room) => (
-                <Chatroom
-                    {...room}
-                    setActiveChatRoom={setActiveChatRoom}
-                    isActive={false}
-                    key={`${room.roomId}-sidepanel`}
-                    data-testid={room.roomId}
-                />
-            ))}
+            <Box bg="blue.dark.0" py={[3]} px={[3]} sx={{}}>
+                {/* logged-in user details. */}
+                <Flex
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{
+                        svg: {
+                            height: 24,
+                            width: 24,
+                            transition: '0.2s',
+                            transform: `rotate(${
+                                isMenuOpen ? '180deg' : '0deg'
+                            })`,
+                            cursor: 'pointer',
+                            path: { fill: 'blue.dark.3' },
+                        },
+                    }}
+                >
+                    <User {...currentUser} />
+                    <BsChevronDown
+                        data-testid="menu-toggle"
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    />
+                </Flex>
+                {/* menu component. */}
+                <CSSTransition
+                    timeout={100}
+                    in={isMenuOpen}
+                    classNames="menu"
+                    unmountOnExit={true}
+                >
+                    <Box
+                        data-testid="menu"
+                        mt={[2]}
+                        sx={{
+                            '&.menu-enter': {
+                                opacity: 0,
+                                height: 0,
+                                transition: '200ms',
+                                overflow: 'hidden',
+                            },
+                            '&.menu-enter-active': {
+                                opacity: 1,
+                                height: 'fit-conent',
+                            },
+                            '&.menu-exit': {
+                                opacity: 1,
+                                height: 'fit-conent',
+                            },
+                            '&.menu-exit-active': {
+                                opacity: 0,
+                                height: 0,
+                                overflow: 'hidden',
+                                transition: '200ms',
+                            },
+                        }}
+                    >
+                        <Text {...menuStyling} role="button">
+                            <BsFillPersonPlusFill /> ADD NEW CHATROOM
+                        </Text>
+                        <Text {...menuStyling} role="button">
+                            <BsPower /> SIGN OUT
+                        </Text>
+                    </Box>
+                </CSSTransition>
+            </Box>
+            <Box px={[1]}>
+                <Box p={[2]}>
+                    <SearchInput search={search} />
+                </Box>
+                {chatrooms.map((room) => (
+                    <Chatroom
+                        {...room}
+                        setActiveChatRoom={setActiveChatRoom}
+                        isActive={false}
+                        key={`${room.roomId}-sidepanel`}
+                        data-testid={room.roomId}
+                    />
+                ))}
+            </Box>
         </Box>
     );
 };

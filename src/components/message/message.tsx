@@ -67,6 +67,8 @@ const Message: React.FC<Props> = ({
                 variant={isMsgSent ? 'sent' : 'received'}
                 width="fit-content"
                 sx={{ transition: '0.2s', borderWidth: showMenu ? 0 : 1 }}
+                pr={isMsgSent ? 2 : ''}
+                pl={isMsgSent ? '' : 2}
             >
                 <Text width="fit-content">{msg}</Text>
                 {isMsgSent && (
@@ -82,7 +84,7 @@ const Message: React.FC<Props> = ({
                             opacity: 0,
                             transition: '0.2s',
                             '&:hover': {
-                                right: 16,
+                                right: 12,
                             },
                             svg: {
                                 height: '100%',

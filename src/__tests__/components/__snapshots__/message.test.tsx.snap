@@ -10,7 +10,7 @@ exports[`Message matches snapshot 1`] = `
     02:12
   </div>
   <div
-    className="css-1pep071"
+    className="css-1aa0t2i"
     data-testid="wrapper"
   >
     <div
@@ -19,7 +19,7 @@ exports[`Message matches snapshot 1`] = `
       Hello, World
     </div>
     <div
-      className="menu-arrow css-1voq0am"
+      className="menu-arrow css-1638tnf"
       data-testid="menu-arrow"
       onClick={[Function]}
     >
