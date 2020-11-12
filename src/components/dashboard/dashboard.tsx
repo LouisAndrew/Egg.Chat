@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 // import styling libs
 import { Flex, Box } from 'rebass';
 import ChatWindow from './chat-window';
 import Sidepanel from './sidepanel';
 // import local components
 
+import AuthContext from 'services/context';
+
 import {
     // User as UserSchema,
     // Chatroom as RoomSchema,
     Status,
 } from 'helper/schema';
+import { mockUser1 } from 'helper/mocks';
 
 // type Props = {};
 // taken from schema/chatroom.ts
@@ -40,6 +43,8 @@ const Dashboard: React.FC<unknown> = () => {
     const [chatPartner, setChatPartner] = useState<
         ChatPartnerDetails | undefined
     >(undefined);
+
+    const { user: loggedInUser, signIn } = useContext(AuthContext);
 
     useEffect(() => {
         const windowWidth = window.innerWidth;
@@ -74,6 +79,8 @@ const Dashboard: React.FC<unknown> = () => {
         setChatPartner(undefined);
     };
 
+    console.log(loggedInUser);
+
     return (
         <Flex
             height="100%"
@@ -93,6 +100,7 @@ const Dashboard: React.FC<unknown> = () => {
             ) : (
                 <Box width={['100vw', '100vw', '70%']} />
             )}
+            <button onClick={() => signIn(mockUser1)}>Sign in</button>
         </Flex>
     );
 };
