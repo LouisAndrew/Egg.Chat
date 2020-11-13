@@ -8,28 +8,10 @@ import Sidepanel from './sidepanel';
 import AuthContext from 'services/context';
 
 import {
-    // User as UserSchema,
+    User as UserSchema,
     // Chatroom as RoomSchema,
     Status,
 } from 'helper/schema';
-import { mockUser1 } from 'helper/mocks';
-
-// type Props = {};
-// taken from schema/chatroom.ts
-export type ChatPartnerDetails = {
-    /**
-     * Img url of the room that should be displayed to the logged in user.
-     */
-    imgUrl: string;
-    /**
-     * Name of the room that should be displayed to the logged in user.
-     */
-    roomName: string;
-    /**
-     * Status of the other user. used to set room as active at sidepanel
-     */
-    roomStatus: Status;
-};
 
 const Dashboard: React.FC<unknown> = () => {
     // used in mobile devices. 💡 To set the transform property of dashboard'wrapper component.
@@ -40,9 +22,9 @@ const Dashboard: React.FC<unknown> = () => {
     const [useTransform, setUseTransform] = useState(focusSidepanel);
 
     const [active, setActive] = useState<string | undefined>(undefined);
-    const [chatPartner, setChatPartner] = useState<
-        ChatPartnerDetails | undefined
-    >(undefined);
+    const [chatPartner, setChatPartner] = useState<UserSchema | undefined>(
+        undefined
+    );
 
     const { user: loggedInUser, signIn } = useContext(AuthContext);
 
@@ -66,9 +48,11 @@ const Dashboard: React.FC<unknown> = () => {
      * Set the active chatroom according to its parameter.
      * @param roomId active room ID
      */
-    const setActiveChatRoom = (roomId: string, args: ChatPartnerDetails) => {
+    const setActiveChatRoom = (roomId: string, user: UserSchema) => {
+        console.log(user);
+
         setActive(roomId);
-        setChatPartner(args);
+        setChatPartner(user);
     };
 
     /**

@@ -36,17 +36,20 @@ const Auth: React.FC<unknown> = () => {
 
         await setIsLoading(true);
         try {
-            const { user, additionalUserInfo } = await auth.signInWithPopup(
-                googleProvider
-            );
+            const { user } = await auth.signInWithPopup(googleProvider);
 
             if ((await user) !== null) {
                 const { uid, displayName, photoURL } = (await user) as any;
 
-                if (await additionalUserInfo) {
-                    createNewUser(displayName, photoURL, uid);
-                } else {
+                if (
+                    await dbRef
+                        .doc(uid)
+                        .get()
+                        .then((doc) => doc.exists)
+                ) {
                     saveUser(uid);
+                } else {
+                    createNewUser(displayName, photoURL, uid);
                 }
             } else {
                 setIsError(true);
@@ -63,6 +66,9 @@ const Auth: React.FC<unknown> = () => {
      */
     const signInWithMockUser = async () => {
         //
+
+        const ALICE_UID = 'ABCD';
+        saveUser(ALICE_UID);
     };
 
     /**
@@ -85,6 +91,8 @@ const Auth: React.FC<unknown> = () => {
             chatrooms: [],
         };
 
+        console.log('new user');
+
         try {
             await dbRef.doc(uid).set(newUser);
             await dispatchSignIn(newUser);
@@ -105,9 +113,12 @@ const Auth: React.FC<unknown> = () => {
             const data = await dbRef
                 .doc(uid)
                 .get()
-                .then((doc) => doc.data());
+                .then((doc) => {
+                    const docData = doc.data();
+                    return { ...docData, uid: doc.id };
+                });
 
-            if (data) {
+            if (await data) {
                 dispatchSignIn((await data) as UserSchema);
             } else {
                 setIsError(true);

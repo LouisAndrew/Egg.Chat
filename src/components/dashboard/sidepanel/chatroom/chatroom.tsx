@@ -3,37 +3,38 @@ import React from 'react';
 import { Box, Heading, Text, Flex, Image } from 'rebass';
 // import local components
 
-import { ChatPartnerDetails } from '../../dashboard';
-import { Chatroom as RoomSchema } from 'helper/schema';
+import { Chatroom as RoomSchema, User as UserSchema } from 'helper/schema';
 import { getTime } from 'helper/util/get-time';
+import { db } from 'services/firebase';
 
-type Props = RoomSchema & {
-    /**
-     * Identifier to identify if this room is currently active at ChatWindow component
-     */
-    isActive: boolean;
-    /**
-     * Boolean attr to identify if the message is a new notification
-     */
-    isNewNotification?: boolean;
-    /**
-     * Test-id for testing purposes.
-     */
-    'data-testid': string;
-    /**
-     * Function to set this room as active in ChatWindow component
-     */
-    setActiveChatRoom: (roomId: string, args: ChatPartnerDetails) => void;
-};
+type Props = RoomSchema &
+    UserSchema & {
+        /**
+         * Identifier to identify if this room is currently active at ChatWindow component
+         */
+        isActive: boolean;
+        /**
+         * Boolean attr to identify if the message is a new notification
+         */
+        isNewNotification?: boolean;
+        /**
+         * Test-id for testing purposes.
+         */
+        'data-testid': string;
+        /**
+         * Function to set this room as active in ChatWindow component
+         */
+        setActiveChatRoom: (roomId: string, user: UserSchema) => void;
+    };
 
 const Chatroom: React.FC<Props> = ({
     roomId,
-    roomName,
-    messages,
-    imgUrl,
     isActive,
-    roomStatus,
     isNewNotification = false,
+    displayImage,
+    displayName,
+    status,
+    messages,
     setActiveChatRoom,
     ...rest
 }) => {
@@ -43,9 +44,15 @@ const Chatroom: React.FC<Props> = ({
      * Function to be called when chatroom comopnent is clicked
      */
     const handleClick = () => {
-        if (roomStatus && roomName && imgUrl) {
-            setActiveChatRoom(roomId, { roomStatus, roomName, imgUrl });
-        }
+        const { uid, chatrooms } = rest;
+
+        setActiveChatRoom(roomId, {
+            displayImage,
+            displayName,
+            status,
+            uid,
+            chatrooms,
+        });
     };
 
     return (
@@ -55,7 +62,7 @@ const Chatroom: React.FC<Props> = ({
             onClick={handleClick}
         >
             <Image
-                src={imgUrl}
+                src={displayImage}
                 sx={{ borderRadius: 16, flexGrow: 1 }}
                 height={[60]}
                 width={[60]}
@@ -77,7 +84,7 @@ const Chatroom: React.FC<Props> = ({
                         width: 'fit-content',
                     }}
                 >
-                    {roomName}
+                    {displayName}
                     {isNewNotification && (
                         <Box
                             data-testid="new-notification-badge"

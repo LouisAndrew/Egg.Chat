@@ -12,18 +12,6 @@ interface Chatroom {
     roomId: string;
     users: string[];
     messages: Message[];
-    /**
-     * Img url of the room that should be displayed to the logged in user.
-     */
-    imgUrl?: string;
-    /**
-     * Name of the room that should be displayed to the logged in user.
-     */
-    roomName?: string;
-    /**
-     * Status of the other user. used to set room as active at sidepanel
-     */
-    roomStatus?: Status;
 }
 
 export type { Chatroom };

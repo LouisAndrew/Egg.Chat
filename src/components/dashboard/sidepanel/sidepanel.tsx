@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { without, differenceBy } from 'lodash';
+import firebase from 'firebase';
 // import styling libs
 import { Box, Flex, Heading, Text } from 'rebass';
 import {
@@ -7,6 +8,7 @@ import {
     BsFillPersonPlusFill,
     BsPower,
     BsChevronLeft,
+    BsChatQuoteFill,
 } from 'react-icons/bs';
 import { CSSTransition } from 'react-transition-group';
 // import local components
@@ -15,7 +17,6 @@ import User from 'components/user';
 
 import { db } from 'services/firebase';
 import { Chatroom as RoomSchema, User as UserSchema } from 'helper/schema';
-import { ChatPartnerDetails } from '../dashboard';
 import { AddChatroomInput, SearchInput } from 'components/inputs';
 import AuthContext from 'services/context';
 
@@ -23,7 +24,7 @@ type Props = {
     /**
      * Function to set a specific chatroom active (show chatroom content in ChatWindow)
      */
-    setActiveChatRoom: (roomId: string, args: ChatPartnerDetails) => void;
+    setActiveChatRoom: (roomId: string, user: UserSchema) => void;
 };
 
 /**
@@ -32,7 +33,7 @@ type Props = {
  */
 const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
     // active chatrooms for this user
-    const [chatrooms, setChatrooms] = useState<RoomSchema[]>([]);
+    const [chatrooms, setChatrooms] = useState<(RoomSchema & UserSchema)[]>([]);
 
     // identifies if the menu should be opened
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,13 +46,18 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
 
     const [searchQuery, setSearchQuery] = useState('');
 
+    const [snapshot, setSnapshot] = useState<
+        | firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
+        | undefined
+    >(undefined);
+
     /**
      * Function to sort the given rooms descending. Sorted by the date of last sent message.
      * If a room has no message in it, the room would be placed at the beginning of the list.
      *
      * @param rooms rooms to be sorted.
      */
-    const sortRooms = (rooms: RoomSchema[]) =>
+    const sortRooms = (rooms: (RoomSchema & UserSchema)[]) =>
         [...rooms].sort((a, b) => {
             // handle if a / b does not have any message in it.
             if (a.messages.length === 0) {
@@ -80,12 +86,28 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
         // fetchRooms function
         // listening to realtime data update.
         dbRef.onSnapshot(async (doc) => {
+            if (doc.metadata.hasPendingWrites) {
+                return;
+            }
+
+            if (snapshot !== undefined) {
+                if (doc.isEqual(snapshot)) {
+                    console.log('no update');
+                    return;
+                } else {
+                    setSnapshot(doc);
+                }
+            } else {
+                setSnapshot(doc);
+            }
+
             // chatroom should be an array of roomIDs.
             const { chatrooms: chatroomData } = doc.data() as any;
 
             // for each chatrooms -> fetch data from chatroom collection
-            const chatroomsUpdated: RoomSchema[] = await Promise.all(
-                chatroomData.map((roomId: string) =>
+            const chatroomsUpdated: (RoomSchema &
+                UserSchema)[] = await Promise.all(
+                chatroomData.map(async (roomId: string) =>
                     chatroomDbRef
                         .doc(roomId)
                         .get()
@@ -101,28 +123,29 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
                             const otherUserData: UserSchema = await userDbRef
                                 .doc(otherUser[0])
                                 .get()
-                                .then(
-                                    (userDoc) => userDoc.data() as UserSchema
-                                );
+                                .then((userDoc) => {
+                                    const docData = userDoc.data();
+                                    return {
+                                        ...docData,
+                                        uid: userDoc.id,
+                                    } as UserSchema;
+                                });
 
                             // TODO: handle if in a chatroom there are multiple users!
                             return {
                                 ...chatroomDocData,
+                                ...otherUserData,
+                                roomId: chatroomDoc.id,
                                 messages: chatroomDocData.messages.map(
                                     (msg: any) => ({
                                         ...msg,
                                         sentAt: msg.sentAt.toDate(),
                                     })
                                 ),
-                                imgUrl: otherUserData.displayImage,
-                                roomName: otherUserData.displayName,
-                                roomId: chatroomDoc.id,
-                                roomStatus: otherUserData.status,
                             };
                         })
                 )
             );
-
             // calls sort rooms here!
             const chatromsUpdatedSorted = sortRooms(chatroomsUpdated);
 
@@ -131,6 +154,10 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
                 JSON.stringify(chatromsUpdatedSorted) !==
                 JSON.stringify(chatrooms)
             ) {
+                console.log({
+                    a: JSON.stringify(chatromsUpdatedSorted),
+                    b: JSON.stringify(chatrooms),
+                });
                 setChatrooms(chatromsUpdatedSorted);
             }
         });
@@ -162,13 +189,22 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
                     } as UserSchema;
                 });
 
-                const availableChatrooms = loggedInUser.chatrooms.map(
-                    (chatroom) => chatroom
+                const alreadyChatting = chatrooms.map((chatroom) => {
+                    // get the other user's uid
+                    const otherUserId = without(
+                        chatroom.users,
+                        loggedInUser.uid
+                    )[0];
+                    return { uid: otherUserId };
+                });
+
+                const searchedUsers = differenceBy(
+                    await rsp,
+                    alreadyChatting,
+                    'uid'
                 );
 
-                // const searchedUsers = differenceBy(await rsp,  )
-
-                // setUserResult(await rsp);
+                setUserResult(searchedUsers);
             } catch (err) {
                 console.error(err);
             }
@@ -188,6 +224,49 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
         const goBackSearchingUser = () => {
             setUserResult([]);
             setIsSearchingUser(false);
+        };
+
+        /**
+         * Start a chatroom with a new user
+         * @param uid ID of the user to start chatting with
+         */
+        const startChatting = async (uid: string) => {
+            try {
+                // room id is the combination of both users' id
+                const roomId = uid.slice(0, 4) + loggedInUser.uid.slice(0, 4);
+
+                const otherUserDbRef = userDbRef.doc(uid);
+
+                // create room instance in db
+                await chatroomDbRef.doc(roomId).set({
+                    users: [uid, loggedInUser.uid],
+                    messages: [],
+                });
+
+                // update chatrooms on loggedin user
+                await dbRef.update({
+                    chatrooms: firebase.firestore.FieldValue.arrayUnion(roomId),
+                });
+                // update chatrooms on target user
+                await otherUserDbRef.update({
+                    chatrooms: firebase.firestore.FieldValue.arrayUnion(roomId),
+                });
+
+                await setIsSearchingUser(false);
+                await setUserResult([]);
+                await setActiveChatRoom(
+                    roomId,
+                    await otherUserDbRef.get().then((doc) => {
+                        const docData = doc.data();
+                        return {
+                            ...docData,
+                            uid: doc.id,
+                        } as UserSchema;
+                    })
+                );
+            } catch (err) {
+                console.error(err);
+            }
         };
 
         // TODO: is Active
@@ -335,6 +414,32 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
                                 ADD NEW CHATROOM
                             </Heading>
                             <AddChatroomInput search={searchChatroomDb} />
+
+                            <Box>
+                                {userResult.map((user) => (
+                                    <Flex
+                                        alignItems="center"
+                                        justifyContent="space-between"
+                                        key={`${user.uid}-search-result`}
+                                        mt={[3]}
+                                        sx={{
+                                            svg: {
+                                                height: 24,
+                                                width: 24,
+                                                cursor: 'pointer',
+                                                path: { fill: 'white.0' },
+                                            },
+                                        }}
+                                    >
+                                        <User {...user} variant="small" />
+                                        <BsChatQuoteFill
+                                            onClick={() =>
+                                                startChatting(user.uid)
+                                            }
+                                        />
+                                    </Flex>
+                                ))}
+                            </Box>
                         </Box>
                     )}
                 </Box>

@@ -16,6 +16,8 @@ const User: React.FC<Props> = ({
     status,
     variant = 'small',
 }) => {
+    console.log({ displayName, displayImage, status });
+
     return (
         <Flex variant={`user${capitalize(variant)}`}>
             <Image src={displayImage} />

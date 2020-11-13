@@ -20,7 +20,7 @@ const ChatInput: React.FC<Props> = ({ sendMsg }) => {
     const [text, setText] = useState<string>('');
 
     const handleSubmit = (event: React.FormEvent<HTMLDivElement>) => {
-        if (text !== null) {
+        if (text !== null && text !== '') {
             event.preventDefault();
             sendMsg(text);
             setText('');

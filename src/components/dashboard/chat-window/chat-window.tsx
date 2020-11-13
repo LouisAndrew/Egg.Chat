@@ -10,7 +10,6 @@ import { ChatInput } from 'components/inputs';
 import { db } from 'services/firebase';
 import { Message as MsgSchema, User as UserSchema } from 'helper/schema';
 import User from 'components/user';
-import { ChatPartnerDetails } from '../dashboard';
 import AuthContext from 'services/context';
 
 type Props = {
@@ -21,7 +20,7 @@ type Props = {
     /**
      * The user that also in this chatroom, but different than the logged-in user.
      */
-    chatPartner: ChatPartnerDetails;
+    chatPartner: UserSchema;
     /**
      * Function to set the current active chatroom to null.
      */
@@ -97,19 +96,6 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
             }
         };
 
-        const { roomName, imgUrl, roomStatus } = chatPartner;
-
-        /**
-         * Mocking user schema from the chatpartner props.
-         */
-        const mockUser: UserSchema = {
-            uid: '',
-            displayImage: imgUrl,
-            displayName: roomName,
-            status: roomStatus,
-            chatrooms: [],
-        };
-
         return (
             <Flex
                 height="100%"
@@ -128,7 +114,7 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
                         aria-label="go back"
                         onClick={goBack}
                     />
-                    <User {...mockUser} variant="big" />
+                    <User {...chatPartner} variant="big" />
                 </Flex>
                 <Flex
                     height="100%"
