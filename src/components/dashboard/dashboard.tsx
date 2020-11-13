@@ -79,8 +79,6 @@ const Dashboard: React.FC<unknown> = () => {
         setChatPartner(undefined);
     };
 
-    console.log(loggedInUser);
-
     return (
         <Flex
             height="100%"
@@ -88,6 +86,8 @@ const Dashboard: React.FC<unknown> = () => {
             sx={{
                 transform: [useTransform, useTransform, 'unset'],
                 transition: '0.2s',
+                position: 'relative',
+                zIndex: 3,
             }}
         >
             <Sidepanel setActiveChatRoom={setActiveChatRoom} />
@@ -100,7 +100,6 @@ const Dashboard: React.FC<unknown> = () => {
             ) : (
                 <Box width={['100vw', '100vw', '70%']} />
             )}
-            <button onClick={() => signIn(mockUser1)}>Sign in</button>
         </Flex>
     );
 };

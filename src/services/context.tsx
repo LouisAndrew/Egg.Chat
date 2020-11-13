@@ -24,8 +24,8 @@ const AuthProvider: React.FC<{ children: any }> = ({ children }) => {
     const [user, setUser] = useState<UserSchema | undefined>(undefined);
     const [lastOnline, setLastOnline] = useState<Date | undefined>(undefined);
 
-    const signIn = (user: UserSchema) => {
-        setUser(user);
+    const signIn = (providedUser: UserSchema) => {
+        setUser(providedUser);
         setLastOnline(new Date());
     };
 
@@ -33,6 +33,8 @@ const AuthProvider: React.FC<{ children: any }> = ({ children }) => {
         setUser(undefined);
         setLastOnline(undefined);
     };
+
+    console.log(user);
 
     return (
         <AuthContext.Provider value={{ user, lastOnline, signIn, signOut }}>
