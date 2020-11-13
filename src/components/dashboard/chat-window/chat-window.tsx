@@ -104,6 +104,7 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
                 p={[2]}
                 bg="white.1"
                 flexGrow={1}
+                flexShrink={0}
             >
                 <Flex
                     alignItems="center"

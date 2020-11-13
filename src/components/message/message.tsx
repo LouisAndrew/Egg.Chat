@@ -67,30 +67,6 @@ const Message: React.FC<Props> = ({
             alignSelf={isMsgSent ? 'flex-end' : 'flex-start'}
             sx={{ position: 'relative' }}
         >
-            {/* {isMsgSent && (
-                <Box
-                    data-testid="menu-arrow"
-                    className="menu-arrow"
-                    sx={{
-                        top: 0,
-                        right: 8,
-                        height: '100%',
-                        cursor: 'pointer',
-                        opacity: 0,
-                        transition: '0.2s',
-                        '&:hover': {
-                            right: 12,
-                        },
-                        svg: {
-                            height: '100%',
-                        },
-                    }}
-                    onClick={() => setShowMenu(true)}
-                >
-                    <BsChevronLeft />
-                </Box>
-            )} */}
-
             {/* render date! */}
             <Text variant="timestamp">{getTime(sentAt)}</Text>
             <Box

@@ -21,6 +21,7 @@ const messagesBase = {
 const chatroomBase = {
     color: 'white.1',
     p: [2],
+    my: [1],
     borderRadius: 16,
     cursor: 'pointer',
     transition: '0.2s',

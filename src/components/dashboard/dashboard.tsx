@@ -74,7 +74,10 @@ const Dashboard: React.FC<unknown> = () => {
                 zIndex: 3,
             }}
         >
-            <Sidepanel setActiveChatRoom={setActiveChatRoom} />
+            <Sidepanel
+                activeChatroom={active || ''}
+                setActiveChatRoom={setActiveChatRoom}
+            />
             {active && chatPartner ? (
                 <ChatWindow
                     roomId={active}

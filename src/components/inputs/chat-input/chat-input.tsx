@@ -39,6 +39,7 @@ const ChatInput: React.FC<Props> = ({ sendMsg }) => {
                 borderColor: 'black.0',
                 borderRadius: 8,
                 p: 1,
+                mb: [5, 5, 0],
             }}
         >
             <Input

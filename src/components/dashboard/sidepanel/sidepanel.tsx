@@ -22,6 +22,10 @@ import AuthContext from 'services/context';
 
 type Props = {
     /**
+     * roomId of the currently active chatroom.
+     */
+    activeChatroom: string;
+    /**
      * Function to set a specific chatroom active (show chatroom content in ChatWindow)
      */
     setActiveChatRoom: (roomId: string, user: UserSchema) => void;
@@ -31,7 +35,7 @@ type Props = {
  * Component that wraps the chatrooms, user, menu and search user components!
  * Connection with database should be made here..
  */
-const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
+const Sidepanel: React.FC<Props> = ({ activeChatroom, setActiveChatRoom }) => {
     // active chatrooms for this user
     const [chatrooms, setChatrooms] = useState<
         { roomId: string; chatPartnerId: string }[]
@@ -272,7 +276,7 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
             <Box
                 bg="blue.dark.1"
                 width={['100vw', '100vw', '40%', '30%']}
-                sx={{ flexGrow: 1 }}
+                sx={{ flexGrow: 1, flexShrink: 0 }}
             >
                 <Box bg="blue.dark.0" py={[3]} px={[3]} sx={{}}>
                     {/* logged-in user details. */}
@@ -354,7 +358,7 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
                                 <Chatroom
                                     {...room}
                                     setActiveChatRoom={setActiveChatRoom}
-                                    isActive={false}
+                                    isActive={room.roomId === activeChatroom}
                                     key={`${room.roomId}-sidepanel`}
                                     data-testid={room.roomId}
                                 />
