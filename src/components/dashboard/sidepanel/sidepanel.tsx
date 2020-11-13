@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { without, differenceBy } from 'lodash';
 import firebase from 'firebase';
 // import styling libs
@@ -33,7 +33,9 @@ type Props = {
  */
 const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
     // active chatrooms for this user
-    const [chatrooms, setChatrooms] = useState<(RoomSchema & UserSchema)[]>([]);
+    const [chatrooms, setChatrooms] = useState<
+        { roomId: string; chatPartnerId: string }[]
+    >([]);
 
     // identifies if the menu should be opened
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,18 +48,13 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
 
     const [searchQuery, setSearchQuery] = useState('');
 
-    const [snapshot, setSnapshot] = useState<
-        | firebase.firestore.DocumentSnapshot<firebase.firestore.DocumentData>
-        | undefined
-    >(undefined);
-
     /**
      * Function to sort the given rooms descending. Sorted by the date of last sent message.
      * If a room has no message in it, the room would be placed at the beginning of the list.
      *
      * @param rooms rooms to be sorted.
      */
-    const sortRooms = (rooms: (RoomSchema & UserSchema)[]) =>
+    const sortRooms = (rooms: RoomSchema[]) =>
         [...rooms].sort((a, b) => {
             // handle if a / b does not have any message in it.
             if (a.messages.length === 0) {
@@ -73,94 +70,69 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
             }
         });
 
-    // mocks.
     const { user: loggedInUser } = useContext(AuthContext);
 
-    if (loggedInUser) {
-        const userDbRef = db.collection('user');
-        const chatroomDbRef = db.collection('chatroom');
+    const userDbRef = db.collection('user');
+    const chatroomDbRef = db.collection('chatroom');
 
-        // initialize database ref.
-        const dbRef = userDbRef.doc(loggedInUser.uid);
+    // initialize database ref.
+    useEffect(() => {
+        // kinda repetitive, but useEffect cannot be called conditionally.
+        if (loggedInUser) {
+            const unsubscribe = userDbRef
+                .doc(loggedInUser.uid)
+                .onSnapshot(async (snapshot) => {
+                    const { chatrooms: chatroomIds } = snapshot.data() as any;
 
-        // fetchRooms function
-        // listening to realtime data update.
-        dbRef.onSnapshot(async (doc) => {
-            if (doc.metadata.hasPendingWrites) {
-                return;
-            }
-
-            if (snapshot !== undefined) {
-                if (doc.isEqual(snapshot)) {
-                    console.log('no update');
-                    return;
-                } else {
-                    setSnapshot(doc);
-                }
-            } else {
-                setSnapshot(doc);
-            }
-
-            // chatroom should be an array of roomIDs.
-            const { chatrooms: chatroomData } = doc.data() as any;
-
-            // for each chatrooms -> fetch data from chatroom collection
-            const chatroomsUpdated: (RoomSchema &
-                UserSchema)[] = await Promise.all(
-                chatroomData.map(async (roomId: string) =>
-                    chatroomDbRef
-                        .doc(roomId)
-                        .get()
-                        // get data from the chatroom collection
-                        .then(async (chatroomDoc) => {
-                            const chatroomDocData = chatroomDoc.data() as any;
-                            const otherUser = without(
-                                chatroomDocData.users,
-                                loggedInUser.uid
-                            );
-
-                            // get the needed img url and display name.
-                            const otherUserData: UserSchema = await userDbRef
-                                .doc(otherUser[0])
+                    // get details of chatroom(s) from firestore db
+                    const chatroomDatasDb: RoomSchema[] = await Promise.all(
+                        chatroomIds.map((id: string) =>
+                            chatroomDbRef
+                                .doc(id)
                                 .get()
-                                .then((userDoc) => {
-                                    const docData = userDoc.data();
+                                .then((doc) => {
+                                    const data = doc.data() as any;
+
                                     return {
-                                        ...docData,
-                                        uid: userDoc.id,
-                                    } as UserSchema;
-                                });
+                                        ...data,
+                                        roomId: doc.id,
+                                        messages: data.messages.map(
+                                            (msg: any) => ({
+                                                ...msg,
+                                                sentAt: msg.sentAt.toDate(),
+                                            })
+                                        ),
+                                    };
+                                })
+                        )
+                    );
 
-                            // TODO: handle if in a chatroom there are multiple users!
+                    // sort the room and then mapping to its corresponding type.
+                    const chatroomDatas = await sortRooms(chatroomDatasDb).map(
+                        (room) => {
+                            const chatPartnerId = without(
+                                room.users,
+                                loggedInUser.uid
+                            )[0];
+
+                            const { roomId } = room;
+
                             return {
-                                ...chatroomDocData,
-                                ...otherUserData,
-                                roomId: chatroomDoc.id,
-                                messages: chatroomDocData.messages.map(
-                                    (msg: any) => ({
-                                        ...msg,
-                                        sentAt: msg.sentAt.toDate(),
-                                    })
-                                ),
+                                roomId,
+                                chatPartnerId,
                             };
-                        })
-                )
-            );
-            // calls sort rooms here!
-            const chatromsUpdatedSorted = sortRooms(chatroomsUpdated);
+                        }
+                    );
 
-            // update data
-            if (
-                JSON.stringify(chatromsUpdatedSorted) !==
-                JSON.stringify(chatrooms)
-            ) {
-                console.log({
-                    a: JSON.stringify(chatromsUpdatedSorted),
-                    b: JSON.stringify(chatrooms),
+                    setChatrooms(chatroomDatas);
                 });
-                setChatrooms(chatromsUpdatedSorted);
-            }
-        });
+
+            return () => unsubscribe();
+        }
+    }, []);
+
+    if (loggedInUser) {
+        const dbRef = userDbRef.doc(loggedInUser.uid);
 
         /**
          * Function to search for a chatroom in contact list.
@@ -192,7 +164,7 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
                 const alreadyChatting = chatrooms.map((chatroom) => {
                     // get the other user's uid
                     const otherUserId = without(
-                        chatroom.users,
+                        chatroom.chatPartnerId,
                         loggedInUser.uid
                     )[0];
                     return { uid: otherUserId };
