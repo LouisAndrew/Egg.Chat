@@ -4,7 +4,7 @@ import variants from './variants';
 
 const theme = {
     //             640,   832,     1040
-    breakpoints: ['40em', '48em', '65em'],
+    breakpoints: ['40em', '48em', '72em'],
     fontSizes: [12, 14, 16, 20, 24, 32, 48, 64],
     colors: {
         blue: {

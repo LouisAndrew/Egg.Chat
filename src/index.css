@@ -12,6 +12,12 @@ code {
         monospace;
 }
 
+/* provide fallback for older browser that doesn't support calc() or var()
+#wrapper {
+    height: 100vh;
+    width: 100vw;
+} */
+
 /* specific for safari on mobile devices -> window should have the height of -webkit-fill-available rather than 100vh */
 /* @media screen and (max-width: 640px) {
     #window {

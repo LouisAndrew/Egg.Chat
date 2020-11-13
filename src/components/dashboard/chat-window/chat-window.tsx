@@ -99,9 +99,10 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
         return (
             <Flex
                 height="100%"
-                width={['100vw', '100vw', '70%']}
+                width={['100vw', '100vw', '60%', '70%']}
                 flexDirection="column"
-                p={[2]}
+                py={[3]}
+                px={[2]}
                 bg="white.1"
                 flexGrow={1}
                 flexShrink={0}
@@ -119,7 +120,7 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
                 </Flex>
                 <Flex
                     height="100%"
-                    my={[2]}
+                    my={[3]}
                     flexDirection="column"
                     px={[3]}
                     sx={{ overflowY: 'scroll', overflowX: 'hidden' }}

@@ -16,13 +16,21 @@ const App: React.FC<any> = () => {
     const { user } = useContext(AuthContext);
     const isLoggedIn = user !== undefined;
 
-    const calculateVhMobile = () => {
+    const calculateViewport = () => {
         const height = window.innerHeight * 0.01;
+        const width = window.innerWidth * 0.01;
         document.documentElement.style.setProperty('--vh', `${height}px`);
+        document.documentElement.style.setProperty('--vw', `${width}px`);
     };
 
     useEffect(() => {
-        calculateVhMobile();
+        calculateViewport();
+
+        window.addEventListener('resize', calculateViewport);
+
+        return () => {
+            window.removeEventListener('resize', calculateViewport);
+        };
     }, []);
 
     return (
@@ -32,20 +40,20 @@ const App: React.FC<any> = () => {
                 justifyContent="center"
                 id="wrapper"
                 sx={{
-                    height: ['calc(var(--vh, 1vh) * 100)', '100vh'],
-                    width: '100vw',
+                    height: 'calc(var(--vh, 1vh) * 100)',
+                    width: 'calc(var(--vw, 1vw) * 100)',
                     overflowX: 'hidden',
                 }}
                 bg="blue.dark.2"
             >
                 <Flex
                     id="window"
-                    bg="blue.dark.1"
+                    bg="blue.dark.2"
                     alignItems="center"
                     justifyContent="center"
                     sx={{
                         height: ['100%', '100%', '100%', 800],
-                        width: ['100vw', '100vw', '100vw', 1200],
+                        width: ['100%', '100%', '100%', 1200],
                         overflow: 'hidden',
                         position: 'relative',
                         borderRadius: [0, 0, 0, 8],

@@ -16,11 +16,9 @@ const User: React.FC<Props> = ({
     status,
     variant = 'small',
 }) => {
-    console.log({ displayName, displayImage, status });
-
     return (
         <Flex variant={`user${capitalize(variant)}`}>
-            <Image src={displayImage} />
+            <Image src={displayImage} sx={{ borderRadius: 8 }} />
             <Flex
                 flexDirection="column"
                 justifyContent="space-between"
