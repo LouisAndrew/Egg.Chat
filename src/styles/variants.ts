@@ -108,7 +108,7 @@ const inputs = {
             path: {
                 color: 'white.1',
             },
-
+            flexShrink: 0,
             '&.reset': {
                 ml: 0,
                 cursor: 'pointer',

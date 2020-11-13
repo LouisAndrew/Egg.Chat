@@ -28,7 +28,7 @@ const AddChatroomInput: React.FC<Props> = ({ search }) => {
         <Box onSubmit={handleSubmit} as="form" variant="inputBox">
             <BsFillPersonPlusFill />
             <Input
-                placeholder="SEARCH BY USERNAME/ID"
+                placeholder="SEARCH BY USERNAME"
                 onChange={(e) => setQuery(e.target.value)}
                 value={query}
             />
@@ -41,7 +41,7 @@ const AddChatroomInput: React.FC<Props> = ({ search }) => {
                     }}
                 />
             )}
-            <Button type="submit" variant="secondary">
+            <Button type="submit" variant="secondary" sx={{ flexShrink: 0 }}>
                 SEARCH
             </Button>
         </Box>

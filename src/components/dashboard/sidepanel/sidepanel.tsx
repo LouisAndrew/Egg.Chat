@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
-import { without } from 'lodash';
+import React, { useState, useContext } from 'react';
+import { without, differenceBy } from 'lodash';
 // import styling libs
-import { Box, Flex, Text } from 'rebass';
-import { BsChevronDown, BsFillPersonPlusFill, BsPower } from 'react-icons/bs';
+import { Box, Flex, Heading, Text } from 'rebass';
+import {
+    BsChevronDown,
+    BsFillPersonPlusFill,
+    BsPower,
+    BsChevronLeft,
+} from 'react-icons/bs';
 import { CSSTransition } from 'react-transition-group';
 // import local components
 import Chatroom from './chatroom';
@@ -10,9 +15,9 @@ import User from 'components/user';
 
 import { db } from 'services/firebase';
 import { Chatroom as RoomSchema, User as UserSchema } from 'helper/schema';
-import { mockUser1 } from 'helper/mocks';
 import { ChatPartnerDetails } from '../dashboard';
-import { SearchInput } from 'components/inputs';
+import { AddChatroomInput, SearchInput } from 'components/inputs';
+import AuthContext from 'services/context';
 
 type Props = {
     /**
@@ -63,195 +68,281 @@ const Sidepanel: React.FC<Props> = ({ setActiveChatRoom }) => {
         });
 
     // mocks.
-    const loggedInUser = 'ABCD';
-    const currentUser = {
-        ...mockUser1,
-        displayImage:
-            'https://www.iconarchive.com/download/i107345/google/noto-emoji-animals-nature/22235-pig-face.ico',
-    };
+    const { user: loggedInUser } = useContext(AuthContext);
 
-    const userDbRef = db.collection('user');
-    const chatroomDbRef = db.collection('chatroom');
+    if (loggedInUser) {
+        const userDbRef = db.collection('user');
+        const chatroomDbRef = db.collection('chatroom');
 
-    // initialize database ref.
-    const dbRef = userDbRef.doc(loggedInUser);
+        // initialize database ref.
+        const dbRef = userDbRef.doc(loggedInUser.uid);
 
-    // fetchRooms function
-    // listening to realtime data update.
-    dbRef.onSnapshot(async (doc) => {
-        // chatroom should be an array of roomIDs.
-        const { chatrooms: chatroomData } = doc.data() as any;
+        // fetchRooms function
+        // listening to realtime data update.
+        dbRef.onSnapshot(async (doc) => {
+            // chatroom should be an array of roomIDs.
+            const { chatrooms: chatroomData } = doc.data() as any;
 
-        // for each chatrooms -> fetch data from chatroom collection
-        const chatroomsUpdated: RoomSchema[] = await Promise.all(
-            chatroomData.map((roomId: string) =>
-                chatroomDbRef
-                    .doc(roomId)
-                    .get()
-                    // get data from the chatroom collection
-                    .then(async (chatroomDoc) => {
-                        const chatroomDocData = chatroomDoc.data() as any;
-                        const otherUser = without(
-                            chatroomDocData.users,
-                            loggedInUser
-                        );
+            // for each chatrooms -> fetch data from chatroom collection
+            const chatroomsUpdated: RoomSchema[] = await Promise.all(
+                chatroomData.map((roomId: string) =>
+                    chatroomDbRef
+                        .doc(roomId)
+                        .get()
+                        // get data from the chatroom collection
+                        .then(async (chatroomDoc) => {
+                            const chatroomDocData = chatroomDoc.data() as any;
+                            const otherUser = without(
+                                chatroomDocData.users,
+                                loggedInUser.uid
+                            );
 
-                        // get the needed img url and display name.
-                        const otherUserData: UserSchema = await userDbRef
-                            .doc(otherUser[0])
-                            .get()
-                            .then((userDoc) => userDoc.data() as UserSchema);
+                            // get the needed img url and display name.
+                            const otherUserData: UserSchema = await userDbRef
+                                .doc(otherUser[0])
+                                .get()
+                                .then(
+                                    (userDoc) => userDoc.data() as UserSchema
+                                );
 
-                        // TODO: handle if in a chatroom there are multiple users!
-                        return {
-                            ...chatroomDocData,
-                            messages: chatroomDocData.messages.map(
-                                (msg: any) => ({
-                                    ...msg,
-                                    sentAt: msg.sentAt.toDate(),
-                                })
-                            ),
-                            imgUrl: otherUserData.displayImage,
-                            roomName: otherUserData.displayName,
-                            roomId: chatroomDoc.id,
-                            roomStatus: otherUserData.status,
-                        };
-                    })
-            )
-        );
+                            // TODO: handle if in a chatroom there are multiple users!
+                            return {
+                                ...chatroomDocData,
+                                messages: chatroomDocData.messages.map(
+                                    (msg: any) => ({
+                                        ...msg,
+                                        sentAt: msg.sentAt.toDate(),
+                                    })
+                                ),
+                                imgUrl: otherUserData.displayImage,
+                                roomName: otherUserData.displayName,
+                                roomId: chatroomDoc.id,
+                                roomStatus: otherUserData.status,
+                            };
+                        })
+                )
+            );
 
-        // calls sort rooms here!
-        const chatromsUpdatedSorted = sortRooms(chatroomsUpdated);
+            // calls sort rooms here!
+            const chatromsUpdatedSorted = sortRooms(chatroomsUpdated);
 
-        // update data
-        if (
-            JSON.stringify(chatromsUpdatedSorted) !== JSON.stringify(chatrooms)
-        ) {
-            setChatrooms(chatromsUpdatedSorted);
-        }
-    });
+            // update data
+            if (
+                JSON.stringify(chatromsUpdatedSorted) !==
+                JSON.stringify(chatrooms)
+            ) {
+                setChatrooms(chatromsUpdatedSorted);
+            }
+        });
 
-    const search = (query: string) => {
-        if (query !== searchQuery) {
-            setSearchQuery(query);
-        }
-    };
+        /**
+         * Function to search for a chatroom in contact list.
+         * @param query search query
+         */
+        const search = (query: string) => {
+            if (query !== searchQuery) {
+                setSearchQuery(query);
+            }
+        };
 
-    // TODO: is Active
-    const menuStyling = {
-        fontFamily: 'heading',
-        fontWeight: 'bold',
-        fontSize: [1],
-        color: '#ddd',
-        px: [3],
-        mt: 3,
-        sx: {
-            display: 'flex',
-            alignItems: 'center',
-            cursor: 'pointer',
-            transition: '0.2s',
-            svg: {
-                height: 24,
-                width: 24,
-                path: { fill: '#ddd' },
-                mr: 3,
+        /**
+         * Function to search available chatroom based on display name from database.
+         * @param query search query.
+         */
+        const searchChatroomDb = async (query: string) => {
+            try {
+                const dbQuery = await userDbRef
+                    .where('displayName', '==', query)
+                    .get();
+                const rsp = await dbQuery.docs.map((doc) => {
+                    const data = doc.data();
+                    return {
+                        ...data,
+                        uid: doc.id,
+                    } as UserSchema;
+                });
+
+                const availableChatrooms = loggedInUser.chatrooms.map(
+                    (chatroom) => chatroom
+                );
+
+                // const searchedUsers = differenceBy(await rsp,  )
+
+                // setUserResult(await rsp);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        /**
+         * Function to show search-chatroom input component
+         */
+        const addNewChatroom = () => {
+            setIsMenuOpen(false);
+            setIsSearchingUser(true);
+        };
+
+        /**
+         * Function to go back from searching-chatroom-from-db state
+         */
+        const goBackSearchingUser = () => {
+            setUserResult([]);
+            setIsSearchingUser(false);
+        };
+
+        // TODO: is Active
+        const menuStyling = {
+            fontFamily: 'heading',
+            fontWeight: 'bold',
+            fontSize: [1],
+            color: '#ddd',
+            px: [3],
+            mt: 3,
+            sx: {
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
                 transition: '0.2s',
+                svg: {
+                    height: 24,
+                    width: 24,
+                    path: { fill: '#ddd' },
+                    mr: 3,
+                    transition: '0.2s',
+                },
+                '&:hover': {
+                    color: 'white.1',
+                    'svg path': { fill: 'white.1' },
+                },
             },
-            '&:hover': {
-                color: 'white.1',
-                'svg path': { fill: 'white.1' },
-            },
-        },
-    };
+        };
 
-    return (
-        <Box
-            bg="blue.dark.1"
-            width={['100vw', '100vw', '40%', '30%']}
-            sx={{ flexGrow: 1 }}
-        >
-            <Box bg="blue.dark.0" py={[3]} px={[3]} sx={{}}>
-                {/* logged-in user details. */}
-                <Flex
-                    alignItems="center"
-                    justifyContent="space-between"
-                    sx={{
-                        svg: {
-                            height: 24,
-                            width: 24,
-                            transition: '0.2s',
-                            transform: `rotate(${
-                                isMenuOpen ? '180deg' : '0deg'
-                            })`,
-                            cursor: 'pointer',
-                            path: { fill: 'blue.dark.3' },
-                        },
-                    }}
-                >
-                    <User {...currentUser} />
-                    <BsChevronDown
-                        data-testid="menu-toggle"
-                        onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    />
-                </Flex>
-                {/* menu component. */}
-                <CSSTransition
-                    timeout={100}
-                    in={isMenuOpen}
-                    classNames="menu"
-                    unmountOnExit={true}
-                >
-                    <Box
-                        data-testid="menu"
-                        mt={[2]}
+        return (
+            <Box
+                bg="blue.dark.1"
+                width={['100vw', '100vw', '40%', '30%']}
+                sx={{ flexGrow: 1 }}
+            >
+                <Box bg="blue.dark.0" py={[3]} px={[3]} sx={{}}>
+                    {/* logged-in user details. */}
+                    <Flex
+                        alignItems="center"
+                        justifyContent="space-between"
                         sx={{
-                            '&.menu-enter': {
-                                opacity: 0,
-                                height: 0,
-                                transition: '200ms',
-                                overflow: 'hidden',
-                            },
-                            '&.menu-enter-active': {
-                                opacity: 1,
-                                height: 'fit-conent',
-                            },
-                            '&.menu-exit': {
-                                opacity: 1,
-                                height: 'fit-conent',
-                            },
-                            '&.menu-exit-active': {
-                                opacity: 0,
-                                height: 0,
-                                overflow: 'hidden',
-                                transition: '200ms',
+                            svg: {
+                                height: 24,
+                                width: 24,
+                                transition: '0.2s',
+                                transform: `rotate(${
+                                    isMenuOpen ? '180deg' : '0deg'
+                                })`,
+                                cursor: 'pointer',
+                                path: { fill: 'blue.dark.3' },
                             },
                         }}
                     >
-                        <Text {...menuStyling} role="button">
-                            <BsFillPersonPlusFill /> ADD NEW CHATROOM
-                        </Text>
-                        <Text {...menuStyling} role="button">
-                            <BsPower /> SIGN OUT
-                        </Text>
-                    </Box>
-                </CSSTransition>
-            </Box>
-            <Box px={[1]}>
-                <Box p={[2]}>
-                    <SearchInput search={search} />
+                        <User {...loggedInUser} />
+                        <BsChevronDown
+                            data-testid="menu-toggle"
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        />
+                    </Flex>
+                    {/* menu component. */}
+                    <CSSTransition
+                        timeout={100}
+                        in={isMenuOpen}
+                        classNames="menu"
+                        unmountOnExit={true}
+                    >
+                        <Box
+                            data-testid="menu"
+                            mt={[2]}
+                            sx={{
+                                '&.menu-enter': {
+                                    opacity: 0,
+                                    height: 0,
+                                    transition: '200ms',
+                                    overflow: 'hidden',
+                                },
+                                '&.menu-enter-active': {
+                                    opacity: 1,
+                                    height: 'fit-conent',
+                                },
+                                '&.menu-exit': {
+                                    opacity: 1,
+                                    height: 'fit-conent',
+                                },
+                                '&.menu-exit-active': {
+                                    opacity: 0,
+                                    height: 0,
+                                    overflow: 'hidden',
+                                    transition: '200ms',
+                                },
+                            }}
+                        >
+                            <Text
+                                {...menuStyling}
+                                role="button"
+                                onClick={addNewChatroom}
+                            >
+                                <BsFillPersonPlusFill /> ADD NEW CHATROOM
+                            </Text>
+                            <Text {...menuStyling} role="button">
+                                <BsPower /> SIGN OUT
+                            </Text>
+                        </Box>
+                    </CSSTransition>
                 </Box>
-                {chatrooms.map((room) => (
-                    <Chatroom
-                        {...room}
-                        setActiveChatRoom={setActiveChatRoom}
-                        isActive={false}
-                        key={`${room.roomId}-sidepanel`}
-                        data-testid={room.roomId}
-                    />
-                ))}
+                <Box px={[1]}>
+                    {!isSearchingUser ? (
+                        <>
+                            <Box p={[2]}>
+                                <SearchInput search={search} />
+                            </Box>
+                            {chatrooms.map((room) => (
+                                <Chatroom
+                                    {...room}
+                                    setActiveChatRoom={setActiveChatRoom}
+                                    isActive={false}
+                                    key={`${room.roomId}-sidepanel`}
+                                    data-testid={room.roomId}
+                                />
+                            ))}
+                            {chatrooms.length === 0 && (
+                                <Text color="white.0" mt={[2]} ml={[2]}>
+                                    No chatroom :(
+                                </Text>
+                            )}
+                        </>
+                    ) : (
+                        <Box p={[3]}>
+                            <Heading
+                                color="white.1"
+                                fontSize={[2]}
+                                mb={[3]}
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    svg: {
+                                        height: 18,
+                                        width: 18,
+                                        mr: [2],
+                                        cursor: 'pointer',
+                                    },
+                                }}
+                            >
+                                <BsChevronLeft onClick={goBackSearchingUser} />
+                                ADD NEW CHATROOM
+                            </Heading>
+                            <AddChatroomInput search={searchChatroomDb} />
+                        </Box>
+                    )}
+                </Box>
             </Box>
-        </Box>
-    );
+        );
+    } else {
+        return null;
+    }
 };
 
 export { Sidepanel };
