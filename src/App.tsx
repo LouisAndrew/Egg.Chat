@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { ThemeProvider } from 'emotion-theming';
 import { Flex } from 'rebass';
@@ -14,9 +14,16 @@ import './index.css';
 
 const App: React.FC<any> = () => {
     const { user } = useContext(AuthContext);
-
     const isLoggedIn = user !== undefined;
-    console.log({ user, isLoggedIn });
+
+    const calculateVhMobile = () => {
+        const height = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${height}px`);
+    };
+
+    useEffect(() => {
+        calculateVhMobile();
+    }, []);
 
     return (
         <ThemeProvider theme={theme}>
@@ -25,7 +32,7 @@ const App: React.FC<any> = () => {
                 justifyContent="center"
                 id="wrapper"
                 sx={{
-                    height: '100vh',
+                    height: ['calc(var(--vh, 1vh) * 100)', '100vh'],
                     width: '100vw',
                     overflowX: 'hidden',
                 }}
@@ -37,11 +44,11 @@ const App: React.FC<any> = () => {
                     alignItems="center"
                     justifyContent="center"
                     sx={{
-                        height: ['100vh', '100vh', '100vh', 800],
+                        height: ['100%', '100%', '100%', 800],
                         width: ['100vw', '100vw', '100vw', 1200],
                         overflow: 'hidden',
                         position: 'relative',
-                        borderRadius: 8,
+                        borderRadius: [0, 0, 0, 8],
                         '#background': {
                             position: 'absolute',
                             right: [0, 0, -16, -64],

@@ -38,8 +38,8 @@ const ChatInput: React.FC<Props> = ({ sendMsg }) => {
                 borderStyle: 'solid',
                 borderColor: 'black.0',
                 borderRadius: 8,
-                p: 1,
-                mb: [5, 5, 0],
+                p: [0, 0, 1],
+                height: [45],
             }}
         >
             <Input
@@ -48,7 +48,11 @@ const ChatInput: React.FC<Props> = ({ sendMsg }) => {
                 onChange={(e) => setText(e.target.value)}
                 variant="variants.chatInput"
             />
-            <Button type="submit" width="fit-content" sx={{ flexShrink: 0 }}>
+            <Button
+                type="submit"
+                width="fit-content"
+                sx={{ flexShrink: 0, flexGrow: 1 }}
+            >
                 SEND <BsPencilSquare />
             </Button>
         </Box>
