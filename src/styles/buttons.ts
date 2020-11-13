@@ -38,4 +38,14 @@ export default {
             },
         },
     },
+    googleButton: {
+        ...baseStyling,
+        bg: '#fff',
+        color: 'rgba(51, 51, 51, 0.8)',
+        svg: {
+            height: 18,
+            width: 18,
+            mr: [3],
+        },
+    },
 };
