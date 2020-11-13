@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { ThemeProvider } from 'emotion-theming';
 import { Flex, Box } from 'rebass';
 
 import theme from './styles/theme';
-import { AuthProvider } from 'services/context';
+import AuthContext, { AuthProvider } from 'services/context';
 
 import Dashboard from 'components/dashboard';
+import Auth from 'components/auth';
 
 const App: React.FC<any> = () => {
+    const { user } = useContext(AuthContext);
+
     return (
         <ThemeProvider theme={theme}>
             <AuthProvider>
@@ -31,7 +34,7 @@ const App: React.FC<any> = () => {
                             // border: '1px solid black',
                         }}
                     >
-                        <Dashboard />
+                        {user ? <Dashboard /> : <Auth />}
                     </Box>
                 </Flex>
             </AuthProvider>
