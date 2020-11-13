@@ -2,7 +2,7 @@
 
 exports[`ChatInput matches snapshot 1`] = `
 <form
-  className="css-p6xuwf"
+  className="css-57m8tn"
   onSubmit={[Function]}
 >
   <input

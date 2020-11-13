@@ -9,6 +9,7 @@ import '@testing-library/jest-dom';
 import Sidepanel from 'components/dashboard/sidepanel';
 import { Chatroom as RoomSchema, User as UserSchema } from 'helper/schema';
 import { mockChatroom, mockUser1, mockUser2 } from 'helper/mocks';
+import withContextProvider from 'helper/util/with-context-provider';
 
 import * as Firebase from 'firebase';
 
@@ -25,7 +26,12 @@ describe('Sidepanel', () => {
     const mockSetActiveChatroom = jest.fn((str) => {});
     const mockChatRooms: RoomSchema[] = [mockChatroom];
 
-    const Element = <Sidepanel setActiveChatRoom={mockSetActiveChatroom} />;
+    const Element = withContextProvider(
+        <Sidepanel
+            activeChatroom={''}
+            setActiveChatRoom={mockSetActiveChatroom}
+        />
+    );
 
     afterEach(cleanup);
     beforeEach(() => {

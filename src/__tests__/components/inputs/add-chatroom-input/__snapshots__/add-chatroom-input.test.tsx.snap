@@ -33,13 +33,13 @@ exports[`AddChatroomInput matches snapshot 1`] = `
   <input
     className="css-4y926w"
     onChange={[Function]}
-    placeholder="SEARCH BY USERNAME/ID"
+    placeholder="SEARCH BY USERNAME"
     type="text"
     value=""
   />
   
   <button
-    className="css-vhv7r1"
+    className="css-14ygah"
     type="submit"
   >
     SEARCH

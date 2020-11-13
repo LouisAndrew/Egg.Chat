@@ -26,7 +26,7 @@ describe('AddChatroomInput', () => {
         const { queryByPlaceholderText, queryByRole } = render(Element);
 
         const submitButton = queryByRole('button');
-        const inputField = queryByPlaceholderText('SEARCH BY USERNAME/ID');
+        const inputField = queryByPlaceholderText('SEARCH BY USERNAME');
 
         expect(submitButton).toBeInTheDocument();
         expect(inputField).toBeInTheDocument();
@@ -36,7 +36,7 @@ describe('AddChatroomInput', () => {
         const { getByPlaceholderText, getByRole } = render(Element);
 
         const submitButton = getByRole('button');
-        const inputField = getByPlaceholderText('SEARCH BY USERNAME/ID');
+        const inputField = getByPlaceholderText('SEARCH BY USERNAME');
 
         userEvent.type(inputField, mockInput);
         userEvent.click(submitButton);
@@ -49,7 +49,7 @@ describe('AddChatroomInput', () => {
         const { getByPlaceholderText, getByRole } = render(Element);
 
         const submitButton = getByRole('button');
-        const inputField = getByPlaceholderText('SEARCH BY USERNAME/ID');
+        const inputField = getByPlaceholderText('SEARCH BY USERNAME');
 
         userEvent.type(inputField, mockInput);
         expect((inputField as HTMLInputElement).value).toBe(mockInput);
@@ -61,7 +61,7 @@ describe('AddChatroomInput', () => {
 
     it('Should not render the reset button if the text field is empty', () => {
         const { getByPlaceholderText, queryByTestId } = render(Element);
-        const inputField = getByPlaceholderText('SEARCH BY USERNAME/ID');
+        const inputField = getByPlaceholderText('SEARCH BY USERNAME');
         const resetButton = queryByTestId('addchatroom-reset');
 
         expect(resetButton).not.toBeInTheDocument();
@@ -72,7 +72,7 @@ describe('AddChatroomInput', () => {
 
     it('Should reset the value of the text field when reset button is clicked', () => {
         const { getByPlaceholderText, getByTestId } = render(Element);
-        const inputField = getByPlaceholderText('SEARCH BY USERNAME/ID');
+        const inputField = getByPlaceholderText('SEARCH BY USERNAME');
 
         userEvent.type(inputField, mockInput);
         const resetButton = getByTestId('addchatroom-reset');

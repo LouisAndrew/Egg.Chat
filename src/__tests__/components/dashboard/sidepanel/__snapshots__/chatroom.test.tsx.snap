@@ -1,35 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Chatroom matches snapshot 1`] = `
-<div
-  className="css-yascl1"
-  data-testid="wrapper"
-  onClick={[Function]}
->
-  <img
-    className="css-1umo6ez"
-    src="./src/img"
-  />
-  <div
-    className="css-uq47rj"
-  >
-    <h2
-      className="css-o4i2m7"
-    >
-      John Doe
-    </h2>
-    <div
-      className="css-12f8mwu"
-      data-testid="last-msg"
-    >
-      Hello, World
-    </div>
-  </div>
-  <div
-    className="css-6rtqbg"
-    data-testid="last-msg-sent"
-  >
-    02:12
-  </div>
-</div>
-`;
+exports[`Chatroom matches snapshot 1`] = `null`;
