@@ -107,7 +107,7 @@ const inputs = {
             height: 16,
             width: 16,
             path: {
-                color: 'white.1',
+                fill: 'white.1',
             },
             flexShrink: 0,
             '&.reset': {
@@ -120,6 +120,9 @@ const inputs = {
             fontSize: 1,
             fontWeight: 500,
             color: 'white.1',
+            svg: {
+                path: { fill: 'white.1' },
+            },
             '&::placeholder': {
                 color: 'white.1',
             },
