@@ -333,7 +333,10 @@ const Sidepanel: React.FC<Props> = ({ activeChatroom, setActiveChatRoom }) => {
          */
         const signOut = async () => {
             await auth.signOut();
-            await dbRef.update({ status: 'Offline' });
+            await dbRef.update({
+                status: 'Offline',
+                lastOnline: firebase.firestore.FieldValue.serverTimestamp(),
+            });
             await dispatchSignOut();
         };
 

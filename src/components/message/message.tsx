@@ -2,16 +2,12 @@ import React, { useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 // import styling libs
 import { Box, Text, Flex } from 'rebass';
-import {
-    BsChevronLeft,
-    BsFillTrashFill,
-    BsXCircleFill,
-    BsThreeDots,
-    BsX,
-} from 'react-icons/bs';
+import { BsFillTrashFill, BsThreeDots, BsX } from 'react-icons/bs';
 // import local components
 import { Message as MsgSchema } from 'helper/schema';
 import { getTime } from 'helper/util/get-time';
+
+import './index.css';
 
 type Props = MsgSchema & {
     /**
@@ -67,6 +63,7 @@ const Message: React.FC<Props> = ({
             alignSelf={isMsgSent ? 'flex-end' : 'flex-start'}
             sx={{ position: 'relative' }}
             flexShrink={0}
+            className={`message-${isMsgSent ? 'sent' : 'received'}`}
         >
             {/* render date! */}
             <Text variant="timestamp">{getTime(sentAt)}</Text>

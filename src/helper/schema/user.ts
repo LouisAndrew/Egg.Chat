@@ -13,6 +13,7 @@ interface User {
     displayName: string;
     status: Status;
     chatrooms: string[];
+    lastOnline: Date;
 }
 
 /**

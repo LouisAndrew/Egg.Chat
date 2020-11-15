@@ -10,8 +10,6 @@ import Dashboard from 'components/dashboard';
 import Auth from 'components/auth';
 import Background from 'background';
 
-import { db } from 'services/firebase';
-
 import './index.css';
 
 const App: React.FC<any> = () => {
@@ -35,11 +33,6 @@ const App: React.FC<any> = () => {
 
         return () => {
             window.removeEventListener('resize', calculateViewport);
-            if (user) {
-                db.collection('user')
-                    .doc(user.uid)
-                    .update({ status: 'Offline' });
-            }
         };
     }, []);
 

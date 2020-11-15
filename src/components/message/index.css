@@ -1,0 +1,29 @@
+@keyframes popin {
+    from {
+        transform: translateX(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes popin-received {
+    from {
+        transform: translateX(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.message-received {
+    animation: popin-received 0.5s;
+}
+
+.message-sent {
+    animation: popin 0.5s;
+}

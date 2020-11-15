@@ -26,15 +26,13 @@ const AuthProvider: React.FC<{ children: any }> = ({ children }) => {
 
     const signIn = (providedUser: UserSchema) => {
         setUser(providedUser);
-        setLastOnline(new Date());
+        setLastOnline(providedUser.lastOnline);
     };
 
     const signOut = () => {
         setUser(undefined);
         setLastOnline(undefined);
     };
-
-    console.log(user);
 
     return (
         <AuthContext.Provider value={{ user, lastOnline, signIn, signOut }}>

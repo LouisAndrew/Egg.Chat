@@ -2,7 +2,7 @@
 
 exports[`Message matches snapshot 1`] = `
 <div
-  className="css-swk17l"
+  className="message-sent css-swk17l"
 >
   <div
     className="css-pqyr7c"

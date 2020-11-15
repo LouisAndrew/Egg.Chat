@@ -47,7 +47,7 @@ const Chatroom: React.FC<Props> = ({
     updateLastUpdated,
     ...rest
 }) => {
-    const { lastOnline } = useContext(AuthContext);
+    const { user, lastOnline } = useContext(AuthContext);
 
     // chat partner state.
     const [chatPartner, setChatPartner] = useState<UserSchema | undefined>(
@@ -125,17 +125,13 @@ const Chatroom: React.FC<Props> = ({
          * Function to be called when chatroom comopnent is clicked
          */
         const handleClick = () => {
-            setActiveChatRoom(roomId, {
-                displayImage,
-                displayName,
-                status,
-                uid,
-                chatrooms,
-            });
+            setLastOpened(new Date());
+            setActiveChatRoom(roomId, chatPartner);
         };
 
         const isNewNotification = lastMsg
-            ? lastMsg.sentAt.getTime() - lastOpened.getTime() > 0
+            ? lastMsg.sentAt.getTime() - lastOpened.getTime() > 0 &&
+              lastMsg.sentBy !== user?.uid
             : false;
 
         return (
@@ -183,7 +179,16 @@ const Chatroom: React.FC<Props> = ({
                             />
                         )}
                     </Heading>
-                    <Text variant="msgPreview" mt="auto" data-testid="last-msg">
+                    <Text
+                        variant="msgPreview"
+                        mt="auto"
+                        data-testid="last-msg"
+                        sx={{
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                        }}
+                    >
                         {lastMsg?.msg}
                     </Text>
                 </Flex>

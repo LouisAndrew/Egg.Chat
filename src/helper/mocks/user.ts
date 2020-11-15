@@ -8,6 +8,7 @@ const mockUser1: User = {
     displayName: 'John Doe',
     status: Status.ONLINE,
     chatrooms: [CHATROOM_ID],
+    lastOnline: new Date(16023160238),
 };
 
 const mockUser2: User = {
@@ -16,6 +17,7 @@ const mockUser2: User = {
     displayName: 'Jane Doe',
     status: Status.OFFLINE,
     chatrooms: [CHATROOM_ID],
+    lastOnline: new Date(1605460238),
 };
 
 export { mockUser2, mockUser1 };

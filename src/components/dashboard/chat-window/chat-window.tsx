@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import firebase from 'firebase';
 // import styling libs
 import { Flex } from 'rebass';
@@ -11,6 +11,7 @@ import { db } from 'services/firebase';
 import { Message as MsgSchema, User as UserSchema } from 'helper/schema';
 import User from 'components/user';
 import AuthContext from 'services/context';
+import { findIndex } from 'lodash';
 
 type Props = {
     /**
@@ -30,6 +31,28 @@ type Props = {
 const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
     const [msgs, setMsgs] = useState<MsgSchema[]>([]);
     const { user: loggedInUser } = useContext(AuthContext);
+
+    const bottom = useRef<HTMLInputElement>(null);
+    // const dashboard = document.getElementById('dashboard');
+
+    // /**
+    //  * Function to scroll to the end of the msg list with smooth behavior
+    //  */
+    // const scrollToBottom = () => {
+    //     if (bottom.current && dashboard) {
+    //         if (!dashboard.classList.contains('translate')) {
+    //             dashboard.classList.add('translate');
+    //         }
+
+    //         bottom.current.scrollIntoView({ behavior: 'smooth' });
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     // setTimeout(() => {
+    //     //     scrollToBottom();
+    //     // }, 200);
+    // }, []);
 
     if (loggedInUser) {
         // initialize database ref.
@@ -78,12 +101,14 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
          */
         const sendMsg = async (msg: string) => {
             try {
+                const msgId = `${createMsgId()}${new Date().getTime()}`;
+
                 // create Msg object
                 // TODO: handle error when msg is not sent.
-                const newMsg = await dbRef.update({
+                await dbRef.update({
                     messages: firebase.firestore.FieldValue.arrayUnion({
                         msg,
-                        msgId: `${createMsgId()}${new Date().getTime()}`,
+                        msgId,
                         sentBy: loggedInUser.uid,
                         // creating firestore-compatible date type. -> FieldValue.serverTimestamp() can't be called here
                         sentAt: firebase.firestore.Timestamp.fromDate(
@@ -91,8 +116,31 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
                         ),
                     }),
                 });
+
+                // await scrollToBottom();
             } catch (e) {
                 console.error(e);
+            }
+        };
+
+        /**
+         * Function to delete a message from the database
+         * @param msgId id of the to be deleted message
+         */
+        const deleteMsg = async (msgId: string) => {
+            const toDeleteIndex = findIndex(msgs, (o) => o.msgId === msgId);
+            if (toDeleteIndex === -1) {
+                return;
+            }
+
+            try {
+                dbRef.update({
+                    messages: firebase.firestore.FieldValue.arrayRemove(
+                        msgs[toDeleteIndex]
+                    ),
+                });
+            } catch (err) {
+                console.error(err);
             }
         };
 
@@ -144,11 +192,13 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
                             key={msg.msgId}
                             {...msg}
                             userId={loggedInUser.uid}
-                            deleteMsg={(msgId: string) => {
-                                console.log(msgId);
-                            }}
+                            deleteMsg={deleteMsg}
                         />
                     ))}
+                    <Flex
+                        ref={bottom}
+                        sx={{ transform: 'translateY(-50vh)' }}
+                    />
                 </Flex>
 
                 <ChatInput sendMsg={sendMsg} />

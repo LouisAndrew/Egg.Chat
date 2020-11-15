@@ -12,3 +12,9 @@
         width: calc(var(--vw, 1vw) * 100) !important;
     }
 }
+
+@media screen and (min-width: 832px) {
+    /* #dashboard.translate {
+        transform: translateY(60px);
+    } */
+}
