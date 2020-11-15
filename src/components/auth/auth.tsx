@@ -171,6 +171,7 @@ const Auth: React.FC<unknown> = () => {
                 width="100%"
                 px={[3]}
                 my={[4]}
+                className="separator"
             >
                 <Box bg="white.1" width="35%" height={1} sx={{}} />
                 <Text

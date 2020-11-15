@@ -3,6 +3,18 @@
     #auth {
         height: fit-content !important;
     }
+
+    #logo {
+        width: 64px !important;
+    }
+
+    #auth h2 {
+        margin: 16px 0 !important;
+    }
+
+    #auth .separator {
+        margin: 16px 0;
+    }
 }
 
 /* specific for tablets on portrait orientation */

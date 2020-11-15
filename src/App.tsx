@@ -19,6 +19,9 @@ const App: React.FC<any> = () => {
     const calculateViewport = () => {
         const height = window.innerHeight * 0.01;
         const width = window.innerWidth * 0.01;
+
+        // document.body.style.height = height.toString() + 'px';
+
         document.documentElement.style.setProperty('--vh', `${height}px`);
         document.documentElement.style.setProperty('--vw', `${width}px`);
     };
