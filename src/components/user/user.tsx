@@ -6,6 +6,9 @@ import { Flex, Box, Heading, Text, Image } from 'rebass';
 import { User as UserSchema, Status as StatusEnum } from 'helper/schema';
 import { capitalize } from 'lodash';
 
+// specific styling for taller mobile devices in its landscape position.
+import './index.css';
+
 type Props = UserSchema & {
     variant?: 'big' | 'small';
 };
@@ -17,7 +20,10 @@ const User: React.FC<Props> = ({
     variant = 'small',
 }) => {
     return (
-        <Flex variant={`user${capitalize(variant)}`}>
+        <Flex
+            variant={`user${capitalize(variant)}`}
+            className={`user-${variant}`}
+        >
             <Image src={displayImage} sx={{ borderRadius: 8 }} />
             <Flex
                 flexDirection="column"

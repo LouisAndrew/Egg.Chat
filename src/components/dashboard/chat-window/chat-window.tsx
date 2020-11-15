@@ -99,13 +99,19 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
         return (
             <Flex
                 height="100%"
-                width={['100vw', '100vw', '60%', '70%']}
+                width={[
+                    'calc(var(--vw, 1vw) * 100)',
+                    'calc(var(--vw, 1vw) * 100)',
+                    '60%',
+                    '70%',
+                ]}
                 flexDirection="column"
                 py={[3]}
                 px={[2]}
                 bg="white.1"
                 flexGrow={1}
                 flexShrink={0}
+                id="chat-window"
             >
                 <Flex
                     alignItems="center"

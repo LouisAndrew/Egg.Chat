@@ -275,8 +275,14 @@ const Sidepanel: React.FC<Props> = ({ activeChatroom, setActiveChatRoom }) => {
         return (
             <Box
                 bg="blue.dark.1"
-                width={['100vw', '100vw', '40%', '30%']}
+                width={[
+                    'calc(var(--vw, 1vw) * 100)',
+                    'calc(var(--vw, 1vw) * 100)',
+                    '40%',
+                    '30%',
+                ]}
                 sx={{ flexGrow: 1, flexShrink: 0 }}
+                id="sidepanel"
             >
                 <Box bg="blue.dark.0" py={[3]} px={[3]} sx={{}}>
                     {/* logged-in user details. */}

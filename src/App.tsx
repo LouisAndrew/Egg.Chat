@@ -41,8 +41,9 @@ const App: React.FC<any> = () => {
                 id="wrapper"
                 sx={{
                     height: 'calc(var(--vh, 1vh) * 100)',
+                    maxHeight: 'calc(var(--vh, 1vh) * 100)',
                     width: 'calc(var(--vw, 1vw) * 100)',
-                    overflowX: 'hidden',
+                    overflow: 'hidden',
                 }}
                 bg="blue.dark.2"
             >

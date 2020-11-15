@@ -66,6 +66,7 @@ const Message: React.FC<Props> = ({
             width="fit-content"
             alignSelf={isMsgSent ? 'flex-end' : 'flex-start'}
             sx={{ position: 'relative' }}
+            flexShrink={0}
         >
             {/* render date! */}
             <Text variant="timestamp">{getTime(sentAt)}</Text>
