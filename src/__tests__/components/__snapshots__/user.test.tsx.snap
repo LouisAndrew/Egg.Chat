@@ -2,10 +2,10 @@
 
 exports[`User matches snapshot 1`] = `
 <div
-  className="css-369q98"
+  className="user-small css-369q98"
 >
   <img
-    className="css-9taffg"
+    className="css-13bnfhx"
     src="http://localhost/src"
   />
   <div

@@ -128,6 +128,7 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
                     height="100%"
                     my={[3]}
                     flexDirection="column"
+                    className="custom-scrollbar"
                     px={[3]}
                     sx={{ overflowY: 'scroll', overflowX: 'hidden' }}
                 >

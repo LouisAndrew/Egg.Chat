@@ -40,3 +40,18 @@ code {
         height: calc(var(--vh, 1vh) * 98) !important;
     }
 }
+
+.custom-scrollbar {
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #07122d;
+}

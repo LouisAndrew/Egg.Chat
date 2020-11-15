@@ -165,14 +165,11 @@ const Sidepanel: React.FC<Props> = ({ activeChatroom, setActiveChatRoom }) => {
                     } as UserSchema;
                 });
 
-                const alreadyChatting = chatrooms.map((chatroom) => {
-                    // get the other user's uid
-                    const otherUserId = without(
-                        chatroom.chatPartnerId,
-                        loggedInUser.uid
-                    )[0];
-                    return { uid: otherUserId };
-                });
+                const alreadyChatting = chatrooms.map((chatroom) => ({
+                    uid: chatroom.chatPartnerId,
+                }));
+
+                console.log({ alreadyChatting });
 
                 const searchedUsers = differenceBy(
                     await rsp,
@@ -273,8 +270,9 @@ const Sidepanel: React.FC<Props> = ({ activeChatroom, setActiveChatRoom }) => {
         };
 
         return (
-            <Box
+            <Flex
                 bg="blue.dark.1"
+                flexDirection="column"
                 width={[
                     'calc(var(--vw, 1vw) * 100)',
                     'calc(var(--vw, 1vw) * 100)',
@@ -354,29 +352,37 @@ const Sidepanel: React.FC<Props> = ({ activeChatroom, setActiveChatRoom }) => {
                         </Box>
                     </CSSTransition>
                 </Box>
-                <Box px={[1]}>
+                <Flex px={[1]} pb={[1]} flexDirection="column" height="100%">
                     {!isSearchingUser ? (
                         <>
                             <Box p={[2]}>
                                 <SearchInput search={search} />
                             </Box>
-                            {chatrooms.map((room) => (
-                                <Chatroom
-                                    {...room}
-                                    setActiveChatRoom={setActiveChatRoom}
-                                    isActive={room.roomId === activeChatroom}
-                                    key={`${room.roomId}-sidepanel`}
-                                    data-testid={room.roomId}
-                                />
-                            ))}
-                            {chatrooms.length === 0 && (
-                                <Text color="white.0" mt={[2]} ml={[2]}>
-                                    No chatroom :(
-                                </Text>
-                            )}
+                            <Box
+                                className="custom-scrollbar"
+                                height="100%"
+                                sx={{ overflowY: 'scroll' }}
+                            >
+                                {chatrooms.map((room) => (
+                                    <Chatroom
+                                        {...room}
+                                        setActiveChatRoom={setActiveChatRoom}
+                                        isActive={
+                                            room.roomId === activeChatroom
+                                        }
+                                        key={`${room.roomId}-sidepanel`}
+                                        data-testid={room.roomId}
+                                    />
+                                ))}
+                                {chatrooms.length === 0 && (
+                                    <Text color="white.0" mt={[2]} ml={[2]}>
+                                        No chatroom :(
+                                    </Text>
+                                )}
+                            </Box>
                         </>
                     ) : (
-                        <Box p={[3]}>
+                        <Flex flexDirection="column" p={[3]} height="100%">
                             <Heading
                                 color="white.1"
                                 fontSize={[2]}
@@ -397,7 +403,12 @@ const Sidepanel: React.FC<Props> = ({ activeChatroom, setActiveChatRoom }) => {
                             </Heading>
                             <AddChatroomInput search={searchChatroomDb} />
 
-                            <Box>
+                            <Box
+                                className="custom-scrollbar"
+                                py={[2]}
+                                height="100%"
+                                sx={{ overflowY: 'scroll' }}
+                            >
                                 {userResult.map((user) => (
                                     <Flex
                                         alignItems="center"
@@ -422,10 +433,10 @@ const Sidepanel: React.FC<Props> = ({ activeChatroom, setActiveChatRoom }) => {
                                     </Flex>
                                 ))}
                             </Box>
-                        </Box>
+                        </Flex>
                     )}
-                </Box>
-            </Box>
+                </Flex>
+            </Flex>
         );
     } else {
         return null;
