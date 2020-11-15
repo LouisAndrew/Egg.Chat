@@ -91,8 +91,6 @@ const Auth: React.FC<unknown> = () => {
             chatrooms: [],
         };
 
-        console.log('new user');
-
         try {
             await dbRef.doc(uid).set(newUser);
             await dispatchSignIn(newUser);
@@ -110,13 +108,14 @@ const Auth: React.FC<unknown> = () => {
      */
     const saveUser = async (uid: string) => {
         try {
-            const data = await dbRef
-                .doc(uid)
-                .get()
-                .then((doc) => {
-                    const docData = doc.data();
-                    return { ...docData, uid: doc.id };
-                });
+            const userRef = dbRef.doc(uid);
+
+            await userRef.update({ status: 'Online' });
+
+            const data = await userRef.get().then((doc) => {
+                const docData = doc.data();
+                return { ...docData, uid: doc.id };
+            });
 
             if (await data) {
                 dispatchSignIn((await data) as UserSchema);

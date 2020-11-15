@@ -115,7 +115,14 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
             >
                 <Flex
                     alignItems="center"
-                    sx={{ svg: { height: [16], width: [16], mr: [3] } }}
+                    sx={{
+                        svg: {
+                            height: [16],
+                            width: [16],
+                            mr: [3],
+                            cursor: 'pointer',
+                        },
+                    }}
                 >
                     <BsChevronLeft
                         role="button"

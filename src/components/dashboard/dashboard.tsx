@@ -3,16 +3,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Flex, Box } from 'rebass';
 import ChatWindow from './chat-window';
 import Sidepanel from './sidepanel';
-// import local components
 
 // custom styling for taller mobile devices on dashboard, sidepanel and chat window.
 import './index.css';
 
-import {
-    User as UserSchema,
-    // Chatroom as RoomSchema,
-    // Status,
-} from 'helper/schema';
+import { User as UserSchema } from 'helper/schema';
 
 const Dashboard: React.FC<unknown> = () => {
     // used in mobile devices. 💡 To set the transform property of dashboard'wrapper component.
@@ -45,21 +40,15 @@ const Dashboard: React.FC<unknown> = () => {
         }
     }, [active]);
 
-    console.log(isMobile);
-
     /**
      * Function to check if the user agent device is a mobile device.
      */
     const checkIsMobile = () => {
-        console.log('checking mobile');
-
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
 
         // first check orientation
         const portrait = windowHeight > windowWidth;
-
-        console.log({ windowWidth, windowHeight });
 
         if (portrait) {
             // check the browser width..

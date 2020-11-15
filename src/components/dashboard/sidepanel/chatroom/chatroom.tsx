@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 // import styling libs
 import { Box, Heading, Text, Flex, Image } from 'rebass';
 // import local components
@@ -10,6 +10,7 @@ import {
 } from 'helper/schema';
 import { getTime } from 'helper/util/get-time';
 import { db } from 'services/firebase';
+import AuthContext from 'services/context';
 
 type Props = {
     /**
@@ -25,10 +26,6 @@ type Props = {
      */
     isActive: boolean;
     /**
-     * Boolean attr to identify if the message is a new notification
-     */
-    isNewNotification?: boolean;
-    /**
      * Test-id for testing purposes.
      */
     'data-testid': string;
@@ -36,22 +33,32 @@ type Props = {
      * Function to set this room as active in ChatWindow component
      */
     setActiveChatRoom: (roomId: string, user: UserSchema) => void;
+    /**
+     * Update timestamp of last sent message
+     */
+    updateLastUpdated: (date: Date, roomId: string) => void;
 };
 
 const Chatroom: React.FC<Props> = ({
     roomId,
     chatPartnerId,
     isActive,
-    isNewNotification = false,
     setActiveChatRoom,
+    updateLastUpdated,
     ...rest
 }) => {
+    const { lastOnline } = useContext(AuthContext);
+
     // chat partner state.
     const [chatPartner, setChatPartner] = useState<UserSchema | undefined>(
         undefined
     );
 
     const [lastMsg, setLastMsg] = useState<MsgSchema | undefined>(undefined);
+
+    const [lastOpened, setLastOpened] = useState<Date>(
+        lastOnline || new Date()
+    );
 
     // Database ref of this room
     const roomDbRef = db.collection('chatroom').doc(roomId);
@@ -97,6 +104,12 @@ const Chatroom: React.FC<Props> = ({
         return () => unsubscribe();
     }, []);
 
+    useEffect(() => {
+        if (lastMsg) {
+            updateLastUpdated(lastMsg.sentAt, roomId);
+        }
+    }, [lastMsg]);
+
     // const isMsgEmpty = messages.length === 0;
 
     if (chatPartner) {
@@ -120,6 +133,10 @@ const Chatroom: React.FC<Props> = ({
                 chatrooms,
             });
         };
+
+        const isNewNotification = lastMsg
+            ? lastMsg.sentAt.getTime() - lastOpened.getTime() > 0
+            : false;
 
         return (
             <Flex
