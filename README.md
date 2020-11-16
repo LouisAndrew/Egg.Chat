@@ -8,4 +8,4 @@ Simple chat application built with react and firebase.
 - React Context API as state management tools 
 
 ### I also made a ER- and UML - Diagram for this application
-https://drive.google.com/file/d/1QI3m04gVzhzq-wYe4s5F-RoXAirIyyZo/view?usp=sharing
+https://drive.google.com/file/d/1Q8gMungAy39cV05RdNQbvpw12bDsCmMm/view?usp=sharing
