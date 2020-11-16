@@ -46,8 +46,8 @@
                 "**/*.ts?(x)"
             ],
             "rules": {
-                "immutable/no-mutation": "warn",
-                "@typescript-eslint/tslint/config": "warn"
+                "immutable/no-mutation": "off",
+                "@typescript-eslint/tslint/config": "off"
             }
         }
     },

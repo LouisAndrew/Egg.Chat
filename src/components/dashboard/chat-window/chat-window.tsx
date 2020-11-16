@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import firebase from 'firebase';
 // import styling libs
@@ -33,26 +35,24 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
     const { user: loggedInUser } = useContext(AuthContext);
 
     const bottom = useRef<HTMLInputElement>(null);
-    // const dashboard = document.getElementById('dashboard');
 
-    // /**
-    //  * Function to scroll to the end of the msg list with smooth behavior
-    //  */
-    // const scrollToBottom = () => {
-    //     if (bottom.current && dashboard) {
-    //         if (!dashboard.classList.contains('translate')) {
-    //             dashboard.classList.add('translate');
-    //         }
+    /**
+     * Function to scroll to the end of the msg list with smooth behavior
+     */
+    const scrollToBottom = () => {
+        if (msgs) {
+            const chatMsgs = document.getElementById('chat-messages');
+            if (chatMsgs) {
+                chatMsgs.scrollTop = chatMsgs.scrollHeight;
+            }
+        }
+    };
 
-    //         bottom.current.scrollIntoView({ behavior: 'smooth' });
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     // setTimeout(() => {
-    //     //     scrollToBottom();
-    //     // }, 200);
-    // }, []);
+    useEffect(() => {
+        setTimeout(() => {
+            scrollToBottom();
+        }, 200);
+    }, []);
 
     if (loggedInUser) {
         // initialize database ref.
@@ -117,7 +117,7 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
                     }),
                 });
 
-                // await scrollToBottom();
+                await scrollToBottom();
             } catch (e) {
                 console.error(e);
             }
@@ -184,8 +184,13 @@ const ChatWindow: React.FC<Props> = ({ roomId, chatPartner, goBack }) => {
                     my={[3]}
                     flexDirection="column"
                     className="custom-scrollbar"
+                    id="chat-messages"
                     px={[3]}
-                    sx={{ overflowY: 'scroll', overflowX: 'hidden' }}
+                    sx={{
+                        overflowY: 'scroll',
+                        overflowX: 'hidden',
+                        scrollBehavior: 'smooth',
+                    }}
                 >
                     {msgs.map((msg) => (
                         <Message
